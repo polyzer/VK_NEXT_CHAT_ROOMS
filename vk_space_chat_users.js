@@ -12,12 +12,13 @@
 var _LocalUser = function (json_params)
 {
 	
-	this.setVideoTextureBF = this.setVideoTexture.bind(this);		
-
+	this.setVideoTextureBF = this.setVideoTexture.bind(this);
+	this.setPointsCallbackBF = this.setPointsCallback.bind(this);		
 
 	if(json_params !== undefined)
 	{
 		this.Scene = json_params.scene;
+		this.CSSScene = json_params.cssscene;
 		this.UserType = USER_TYPES.LOCAL;
 		this.AllUsers = json_params.all_users;
 		this.NetMessagesObject = json_params.net_messages_object;
@@ -27,7 +28,6 @@ var _LocalUser = function (json_params)
 
 		this.VisualKeeper = new _VisualKeeper({scene: this.Scene, camera: this.Camera, user_type: this.UserType});
 		this.Stream = json_params.stream;
-
 
 		this.Controls = new THREE.FlyControls(this.VisualKeeper.getVideoMesh());
 		this.Controls.movementSpeed = 90;
@@ -42,12 +42,66 @@ var _LocalUser = function (json_params)
 	}else
 		console.log(this.constructor.name + " have no json_params!");
 
+	this.ChatControls = new _ChatControls({
+		on_find_next_button_click: json_params.chat_controls_callback_bf,
+		scene: this.Scene,
+		cssscene: this.CSSScene
+	});
+	this.CollectingObjects = new _CollectingObjects(
+		this.Scene,
+		this.VisualKeeper.getVideoMesh(), 
+		this.setPointsCallbackBF
+	);
+	this.VisualKeeper.setTargetMeshByColor(this.CollectingObjects.getColor());
+	this.Points = {};
+	this.Points.Div = document.createElement("div");
+	document.body.appendChild(this.Points.Div);
+	this.Points.Div.id = "PointsNumber";
+	this.Points.Num = 0;
+	this.updateVisualPoints();
+
 };
 
+_LocalUser.prototype.resetMeForNewRoom = function ()
+{
+	this.Points.Num -= 1000;
+	this.updateVisualPoints();
+	this.CollectingObjects.resetColor();
+	this.CollectingObjects.deleteObjects();
+	this.CollectingObjects.createObjects();
+	this.VisualKeeper.setTargetMeshByColor(this.CollectingObjects.getColor());
+	this.hideChatControlsIfItNeed();
+};
 
+_LocalUser.prototype.setPointsCallback = function (num)
+{
+	this.Points.Num += num;
+	this.updateVisualPoints();
+	if(this.Points.Num >= 1000)
+	{
+		this.showVisualChatControls();
+	}
+};
+_LocalUser.prototype.showVisualChatControls = function ()
+{
+	this.ChatControls.showFindNextRoomButton();
+};
+_LocalUser.prototype.hideVisualChatControls = function ()
+{
+	this.ChatControls.hideFindNextRoomButton();
+};
+_LocalUser.prototype.hideChatControlsIfItNeed = function ()
+{
+	if(this.Points.Num < 1000)
+	{
+		this.hideVisualChatControls();
+	}
+};
 
-
-
+_LocalUser.prototype.updateVisualPoints = function ()
+{
+	this.Points.Div.innerHTML = this.Points.Num;
+};
 _LocalUser.prototype.setRandomMeshPosition = function ()
 {
 	this.VisualKeeper.setRandomPosition();
@@ -174,12 +228,15 @@ _LocalUser.prototype.controlDistance = function ()
 
 /* Обновляет все необходимые объекты и проводит вычисления
  */
-_LocalUser.prototype.update = function ()
+_LocalUser.prototype.update = function (mult)
 {
-	this.Controls.update(0.1);
+	this.Controls.update(0.01*mult);
+	this.CollectingObjects.update();
 	this.updateMessages();
 	this.sendDataToAllRemoteUsers(this.NetMessagesObject.MoveMessage);	
 	this.controlDistance();
+	this.VisualKeeper.update();
+//	this.ChatControls.update(this.VisualKeeper.getVideoMesh().position, this.VisualKeeper.getVideoMesh().rotation);
 };
 
 
@@ -232,12 +289,12 @@ var _RemoteUser = function (json_params)
 		this.Connection = null;
 		this.NetMessagesObject = null;
 		this.AllUsers = null;
-		this.Ship = null;
 		this.ConnectionStatus = null;
 		this.Nickname = null;
 		this.MediaConnection = null;
 		this.UserType = USER_TYPES.REMOTE;		
-				
+		this.BoundedStatus = false;
+
 	if(json_params !== undefined)
 	{
 		this.Scene = json_params.scene;		
@@ -269,6 +326,15 @@ var _RemoteUser = function (json_params)
 	this.onMediaConnectionCloseBF = this.onMediaConnectionClose.bind(this);
 	this.onMediaConnectionErrorBF = this.onMediaConnectionError.bind(this);
 
+};
+
+_RemoteUser.prototype.wasBounded = function ()
+{
+	return this.BoundingStatus;
+};
+_RemoteUser.prototype.boundMe = function ()
+{
+	this.BoundingStatus = true;
 };
 
 _RemoteUser.prototype.getPeerID = function ()

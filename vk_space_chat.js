@@ -8,6 +8,8 @@ var _VKSpaceChat = function (json_params)
 	this.onOpenInitAndStartGameBF = this.onOpenInitAndStartGame.bind(this);
 	this.onPeerServerConnectionOpenBF = this.onPeerServerConnectionOpen.bind(this);
 	this.onRecieveMediaConnectionBF = this.onRecieveMediaConnection.bind(this);
+	this.onFindNewRoomBF = this.onFindNewRoom.bind(this);
+	this.resetWorldAndCreateUsersByExistingConnectionsBF = this.resetWorldAndCreateUsersByExistingConnections.bind(this);
 
 	this.Renderer = null;
 	this.CSSRenderer = null;
@@ -118,8 +120,16 @@ var _VKSpaceChat = function (json_params)
 	this.Peer.on("error", function (err) {
 		console.log(err.type);
 	});
-		
-  this.onOpenInitAndStartGame();
+
+	this.VisavisCounter = {};
+	this.VisavisCounter.Div = document.createElement("div");
+	this.VisavisCounter.Div.appendChild(document.createTextNode("Визави в комнате: 0"));
+	document.body.appendChild(this.VisavisCounter.Div);
+	this.VisavisCounter.Div.id = "VisavisCounter";
+	this.VisavisCounter.LastNum = 0;
+
+	this.Time = Date.now();
+	this.onOpenInitAndStartGame();
 };		
 
 _VKSpaceChat.prototype.onRecieveMediaConnection = function (call)
@@ -149,14 +159,15 @@ _VKSpaceChat.prototype.onOpenInitAndStartGame = function (e)
 		camera: this.Camera,
 		body: this.Body,
 		stream: window.StreamObj,
-		peer: this.Peer
+		peer: this.Peer,
+		cssscene: this.CSSScene,
+		chat_controls_callback_bf: this.onFindNewRoomBF
 	});
 	this.AllUsers.push(this.LocalUser);
 	this.AllUsers.push(this.RemoteUsers);
 
 	this.getAndSetInitConnections();
 
-	
 	this.startWorkingProcess();
 
 }
@@ -169,7 +180,7 @@ _VKSpaceChat.prototype.onFindNewRoom = function ()
 		url: req_str,
 		async: true,
 		data: {user_id: this.Peer.id},
-		success: this.resetWorldAndCreateUsersByExistingConnections,
+		success: this.resetWorldAndCreateUsersByExistingConnectionsBF,
 		error: function (jqXHR, textStatus, errorThrown) {
 			alert(textStatus + " " + errorThrown);
 		}
@@ -179,7 +190,7 @@ _VKSpaceChat.prototype.onFindNewRoom = function ()
 _VKSpaceChat.prototype.resetWorldAndCreateUsersByExistingConnections = function(json_params)
 {
 	this.disconnectRemoteUsers();
-	this.AllUsers[0].setRandomMeshPosition();
+	this.AllUsers[0].resetMeForNewRoom();
 	this.createUsersByExistingConnections(json_params);
 };
 
@@ -201,15 +212,15 @@ _VKSpaceChat.prototype.createUsersByExistingConnections = function (json_params)
 	{
 		json_params = JSON.parse(json_params);
 	}
-	for(var i=0; i<json_params.response.length; i++)
+	for(var i=0; i<json_params.users_array.length; i++)
 	{
 		// на сервере уже будет установлено наше соединение;
 		// а сами к себе мы подсоединяться не должны!
-		if(this.Peer.id === json_params.response[i])
+		if(this.Peer.id === json_params.users_array[i])
 		{
 			continue;
 		}
-		var conn = this.Peer.connect(json_params.response[i]);
+		var conn = this.Peer.connect(json_params.users_array[i]);
 		this.RemoteUsers.push(new _RemoteUser({
 				net_messages_object: this.NetMessagesObject,
 				all_users: this.AllUsers,
@@ -233,15 +244,29 @@ _VKSpaceChat.prototype.makeCallsToAllRemoteUsers = function (stream)
 	
 };
 
+_VKSpaceChat.prototype.updateVisavisCounter = function ()
+{
+	if(this.AllUsers[1].length !== this.LastNum)
+	{
+		this.VisavisCounter.Div.removeChild(this.VisavisCounter.Div.firstChild);
+		this.VisavisCounter.Div.appendChild(document.createTextNode("Визави в комнате: " + this.AllUsers[1].length));
+		this.LastNum = this.AllUsers[1].length;
+	}
+};
+
 /* Важнейшая функция игры, в которой происходит управление и обновление всех систем!!
  */
 
 _VKSpaceChat.prototype.updateWorkingProcess = function ()
 {
+
 		this.Renderer.render(this.Scene, this.Camera);
-		this.LocalUser.update();
+		this.CSSRenderer.render(this.CSSScene, this.Camera);
 		this.updateRemoteUsers();
 		this.FlyingObjects.update();
+		this.LocalUser.update(Date.now() - this.Time);
+		this.Time = Date.now();
+		this.updateVisavisCounter();
 
 	  requestAnimationFrame(this.updateWorkingProcessBF);
 }

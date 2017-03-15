@@ -28,7 +28,7 @@ console.error = console.log;
 var RETURN_NOTHING = "0";
 var ACCESS_CONTROL_ALLOW_ORIGIN = "https://www.polyzer.org";
 var ACCESS_CONTROL_ALLOW_HEADERS = "Origin, X-Requested-With, Content-Type, Accept";
-var MAX_USERS_IN_ROOM = 3; // максимум человек в комнате;
+var MAX_USERS_IN_ROOM = 5; // максимум человек в комнате;
 
 
 var app = express();
@@ -139,8 +139,8 @@ function MultiRoom_onDisconnect(id)
 		}
 	}
 
-	throw new Error(id + " wasn't in any array");
-	//console.log(id + " wasn't in any array");
+//	throw new Error(id + " wasn't in any array");
+	console.log(id + " wasn't in any array");
 
 }
 /*при коннектинге - добавляется в рандомную комнату*/
@@ -155,7 +155,7 @@ function MultiRoom_onGetRoomsList(req, res)
 	res.header("Access-Control-Allow-Origin", ACCESS_CONTROL_ALLOW_ORIGIN);
 	res.header("Access-Control-Allow-Headers", ACCESS_CONTROL_ALLOW_HEADERS);  
   
-	res.send(JSON.stringify({response: Rooms}));
+	res.send(JSON.stringify({users_array: Rooms}));
 }
 
 function MultiRoom_onComeIntoRoom(req, res)
@@ -192,9 +192,9 @@ function MultiRoom_onComeIntoRoom(req, res)
 
 						for (var k=0; k< Rooms.length; k++)
 						{
-							if(Rooms[k].length < MAX_USERS_IN_ROOM && Rooms[k].RoomID !== AllUsers[i].LastRoomID)
+							if(Rooms[k].UsersIDSArray.length < MAX_USERS_IN_ROOM && Rooms[k].RoomID !== AllUsers[i].LastRoomID)
 							{
-								res.send({response: Rooms[k].UsersIDSArray});
+								res.send({users_array: Rooms[k].UsersIDSArray});
 								Rooms[k].push(req.body.user_id);
 								return;
 							}
@@ -202,8 +202,8 @@ function MultiRoom_onComeIntoRoom(req, res)
 						/*Если мы не нашли свободной комнаты, то создаем ее!
 						И отправляем в ответе пустой массив!
 						*/
-						createRoomByUserAndAddToRooms(req.body.user_id);
-						res.send({response: []});
+						createRoomByUserAndAddToRooms(AllUsers[i]);
+						res.send({users_array: []});
 						return;
 					}
 				}
@@ -213,15 +213,14 @@ function MultiRoom_onComeIntoRoom(req, res)
 				{
 					if(Rooms[j].UsersIDSArray.length < MAX_USERS_IN_ROOM)
 					{
-						res.send({response: Rooms[j].UsersIDSArray});
+						res.send({users_array: Rooms[j].UsersIDSArray});
 						Rooms[j].UsersIDSArray.push(req.body.user_id);
 						AllUsers[i].CurrentRoomID = Rooms[j].RoomID;
-						AllUsers[i].CurrentRoom = Rooms[j];
 						return;
 					}
 				}
 				createRoomByUserAndAddToRooms(AllUsers[i]);
-				res.send({response: []});
+				res.send({users_array: []});
 				return;
 			}
 		}
@@ -230,29 +229,6 @@ function MultiRoom_onComeIntoRoom(req, res)
 	throw new Error("User isn't in arrays");
 
 
-
-/*
-	for(var i=0; i< AllUsers.length; i++)
-	{
-		if(AllUsers[i].ID === req.body.user_id)
-		{
-			for(var j=0; j< Rooms.length; j++)
-			{
-				if(Rooms[j].UsersIDSArray.length < MAX_USERS_IN_ROOM)
-				{
-					res.send({response: Rooms[j].UsersIDSArray});
-					Rooms[j].UsersIDSArray.push(req.body.user_id);
-					AllUsers[i].CurrentRoomID = Rooms[j].RoomID;
-					AllUsers[i].CurrentRoom = Rooms[j];
-					return;
-				}
-			}
-			createRoomByUserAndAddToRooms(AllUsers[i]);
-			res.send({response: []});
-		}
-
-	}
-*/
 }
 
 /*Поиск новой комнаты для пользователя.
@@ -260,6 +236,9 @@ function MultiRoom_onComeIntoRoom(req, res)
 */
 function MultiRoom_onFindRoomToMe (req, res)
 {
+	res.header("Access-Control-Allow-Origin", ACCESS_CONTROL_ALLOW_ORIGIN);
+	res.header("Access-Control-Allow-Headers", ACCESS_CONTROL_ALLOW_HEADERS);  
+
 	for(var i=0; i< AllUsers.length; i++)
 	{
 		if(AllUsers[i].ID === req.body.user_id)
@@ -281,13 +260,15 @@ function MultiRoom_onFindRoomToMe (req, res)
 									Rooms.splice(j, 1);
 								}
 								AllUsers[i].CurrentRoomID = null;
+								break;
 							}
 						}
+
 						for (var k=0; k< Rooms.length; k++)
 						{
-							if(Rooms[k].length < MAX_USERS_IN_ROOM && Rooms[k].RoomID !== AllUsers[i].LastRoomID)
+							if(Rooms[k].UsersIDSArray.length < MAX_USERS_IN_ROOM && Rooms[k].RoomID !== AllUsers[i].LastRoomID)
 							{
-								res.send({response: Rooms[k].UsersIDSArray});
+								res.send({users_array: Rooms[k].UsersIDSArray});
 								Rooms[k].push(req.body.user_id);
 								return;
 							}
@@ -295,11 +276,26 @@ function MultiRoom_onFindRoomToMe (req, res)
 						/*Если мы не нашли свободной комнаты, то создаем ее!
 						И отправляем в ответе пустой массив!
 						*/
-						createRoomByUserAndAddToRooms(req.body.user_id);
-						res.send({response: []});
+						createRoomByUserAndAddToRooms(AllUsers[i]);
+						res.send({users_array: []});
 						return;
 					}
 				}
+			} else
+			{
+				for(var j=0; j< Rooms.length; j++)
+				{
+					if(Rooms[j].UsersIDSArray.length < MAX_USERS_IN_ROOM)
+					{
+						res.send({users_array: Rooms[j].UsersIDSArray});
+						Rooms[j].UsersIDSArray.push(req.body.user_id);
+						AllUsers[i].CurrentRoomID = Rooms[j].RoomID;
+						return;
+					}
+				}
+				createRoomByUserAndAddToRooms(AllUsers[i]);
+				res.send({users_array: []});
+				return;
 			}
 		}
 	}

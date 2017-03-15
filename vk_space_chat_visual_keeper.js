@@ -20,6 +20,12 @@ var _VisualKeeper = function (json_params)
 	this.Video.width = CAMERA_VIDEO_SIZES.SMALL;
 	this.Video.height = CAMERA_VIDEO_SIZES.SMALL;
 
+	this.TargetMesh = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshStandardMaterial({color: 0x000000, side: THREE.DoubleSide, }));
+	this.TargetMesh.add(new THREE.LineSegments( 
+		new THREE.EdgesGeometry( this.TargetMesh.geometry ), 
+		new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } )
+	));
+	this.TargetMesh.position.set(-20, -10, -50);
 	this.VideoMesh = {};
 	this.VideoMesh.Geometry = new THREE.PlaneGeometry(CAMERA_VIDEO_SIZES.SMALL, CAMERA_VIDEO_SIZES.SMALL);
 	this.VideoMesh.Material = null;
@@ -72,7 +78,12 @@ var _VisualKeeper = function (json_params)
 	{
 //		this.VideoMesh.Mesh = new THREE.Mesh(this.VideoMesh.Geometry, this.VideoMesh.Material);		
 //		this.Video.muted = 1;
-		this.VideoMesh.Mesh = this.Camera;
+		this.Scene.remove(this.Camera);
+		this.VideoMesh.Mesh = new THREE.Object3D();
+		this.VideoMesh.Mesh.add(this.Camera);
+		this.VideoMesh.Mesh.add(this.TargetMesh);
+		this.Scene.add(this.VideoMesh.Mesh);
+//		this.VideoMesh.Mesh = this.Camera;
 	}else if(this.UserType === USER_TYPES.REMOTE)
 	{
 		this.VideoMesh.Mesh = new THREE.Mesh(this.VideoMesh.Geometry, this.VideoMesh.Material);
@@ -87,6 +98,11 @@ var _VisualKeeper = function (json_params)
 	}
 
 };
+/*функция только для ЛОКАЛЬНОГО ПОЛЬЗОВАТЕЛЯ*/
+_VisualKeeper.prototype.setTargetMeshByColor = function (new_color)
+{
+	this.TargetMesh.material.color.set(new_color);
+}
 
 _VisualKeeper.prototype.setRandomPosition = function ()
 {
@@ -100,8 +116,9 @@ _VisualKeeper.prototype.setRandomPosition = function ()
 
 
 // это функция, которая должна вызываться в главной игровой функции
-_VisualKeeper.prototype.Life = function ()
+_VisualKeeper.prototype.update = function ()
 {
+	this.TargetMesh.rotation.y += 0.002;
 };
 
 /* Устанавливает позицию корабля

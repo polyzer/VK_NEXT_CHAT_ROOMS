@@ -1,3 +1,6 @@
+body {
+	font-family: Verdana;
+}
 #greeting_and_access_agreement_div
 {
 	height: auto;
@@ -22,7 +25,7 @@
     text-decoration: none;
     cursor: pointer;
     border: 3px solid black;
- }
+}
 
 #nickname_input{
 	width: 300px;
@@ -137,9 +140,56 @@
 	background-color: white;
 	transition: background-color 1s;
 }
+#FindNextButton{
+	position: absolute;
+	left: 600px;
+	top: 500px;
+
+	width: auto;
+	height: auto;
+
+	background-color: yellow;
+	font-size: 40px;	
+	font-family: 'Lobster', cursive;
+	font-color: white;
+
+	padding: 2px 2px 2px 2px;
+	border: 2px solid white;
+	cursor: pointer;
+	z-index: 1000000;
+}
+#FindNextButton:hover{
+	background-color: white;
+	transition: background-color 1s;
+}
 
 #Vis_a_Vis_Text{
 	background-image: url("models/vis_a_vis_text.png");
 	width: 500px;
 	height: 109px;
+}
+#PointsNumber{
+	position: absolute;
+	left: 100px;
+	top: 600px;
+	z-index: 1000000;
+}
+
+#VisavisCounter{
+	position: absolute;
+	left: 0px;
+	top: 10px;
+
+	width: auto;
+	height: auto;
+
+	background-color: yellow;
+	font-size: 20px;	
+	font-family: 'Lobster', cursive;
+	font-color: white;
+
+	padding: 2px 2px 2px 2px;
+	border: 2px solid white;
+	cursor: pointer;
+	z-index: 1000000;	
 }

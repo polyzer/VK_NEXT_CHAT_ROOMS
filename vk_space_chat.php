@@ -22,6 +22,8 @@
 <script src="./vk_space_chat_my_controls.js"></script>
 <script src="./vk_space_chat_flying_objects.js"></script>
 <script src="./vk_space_chat_user_chat_controls.js"></script>
+<script src="./vk_space_chat_collecting_objects.js"></script>
+
 </head>
 <body>
 <div id="ID_VIEWER" style="position: absolute; left: 0px; top: 0px; z-index: 1000000; background-color: yellow;"></div>

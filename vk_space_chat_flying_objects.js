@@ -40,14 +40,13 @@ _FlyingObjects.prototype.update = function ()
 	{		
 		if(this.FlyingObjects[i].position.y >= WORLD_CUBE.SCALED_SIZE.y)
 		{
-			this.FlyingObjects[i].position.x = (Math.random()*2 - 1) * WORLD_CUBE.SCALED_SIZE.x;
-			this.FlyingObjects[i].position.y = (-1) * WORLD_CUBE.SCALED_SIZE.y;
-			this.FlyingObjects[i].position.z = (Math.random()*2 - 1) * WORLD_CUBE.SCALED_SIZE.z;
+			this.FlyingObjects[i].position.x = (Math.random()*2 - 1)/2 * WORLD_CUBE.SCALED_SIZE.x;
+			this.FlyingObjects[i].position.y = (-1)/2 * WORLD_CUBE.SCALED_SIZE.y;
+			this.FlyingObjects[i].position.z = (Math.random()*2 - 1)/2 * WORLD_CUBE.SCALED_SIZE.z;
 			this.FlyingObjects[i].material.color.set(0xffffff*Math.random());			
 			this.FlyingObjects[i].MoveSpeed = Math.random()*FLYING_OBJECTS.MAX_SPEED;
 		} else
 		{
-			this.FlyingObjects[i].position.y += 30;
 			this.FlyingObjects[i].position.y += this.FlyingObjects[i].MoveSpeed;
 		}
 	}
@@ -56,13 +55,12 @@ _FlyingObjects.prototype.update = function ()
 	{		
 		if(this.FlyingObjects[i].position.y >= WORLD_CUBE.SCALED_SIZE.y)
 		{
-			this.FlyingObjects[i].position.x = (Math.random()*2 - 1) * WORLD_CUBE.SCALED_SIZE.x;
-			this.FlyingObjects[i].position.y = (-1) * WORLD_CUBE.SCALED_SIZE.y;
-			this.FlyingObjects[i].position.z = (Math.random()*2 - 1) * WORLD_CUBE.SCALED_SIZE.z;
+			this.FlyingObjects[i].position.x = (Math.random()*2 - 1)/2 * WORLD_CUBE.SCALED_SIZE.x;
+			this.FlyingObjects[i].position.y = (-1)/2 * WORLD_CUBE.SCALED_SIZE.y;
+			this.FlyingObjects[i].position.z = (Math.random()*2 - 1)/2 * WORLD_CUBE.SCALED_SIZE.z;
 			this.FlyingObjects[i].MoveSpeed = Math.random()*FLYING_OBJECTS.MAX_SPEED;
 		} else
 		{
-			this.FlyingObjects[i].position.y += 30;
 			this.FlyingObjects[i].position.y += this.FlyingObjects[i].MoveSpeed;
 		}
 	}	
