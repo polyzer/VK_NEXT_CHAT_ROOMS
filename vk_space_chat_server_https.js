@@ -35,7 +35,7 @@ var app = express();
 var httpsServer = https.createServer(credentials, app).listen(const_and_funcs.PEER_PORT_ADDR);
 
 var options = {
-	debug: true,
+//	debug: true,
 };
 
 var peerServer = ExpressPeerServer(httpsServer, options);
@@ -195,7 +195,8 @@ function MultiRoom_onComeIntoRoom(req, res)
 							if(Rooms[k].UsersIDSArray.length < MAX_USERS_IN_ROOM && Rooms[k].RoomID !== AllUsers[i].LastRoomID)
 							{
 								res.send({users_array: Rooms[k].UsersIDSArray});
-								Rooms[k].push(req.body.user_id);
+								AllUsers[i].CurrentRoomID = Rooms[k].RoomID;
+								Rooms[k].UsersIDSArray.push(req.body.user_id);
 								return;
 							}
 						}
@@ -269,7 +270,8 @@ function MultiRoom_onFindRoomToMe (req, res)
 							if(Rooms[k].UsersIDSArray.length < MAX_USERS_IN_ROOM && Rooms[k].RoomID !== AllUsers[i].LastRoomID)
 							{
 								res.send({users_array: Rooms[k].UsersIDSArray});
-								Rooms[k].push(req.body.user_id);
+								AllUsers[i].CurrentRoomID = Rooms[k].RoomID;
+								Rooms[k].UsersIDSArray.push(req.body.user_id);
 								return;
 							}
 						}

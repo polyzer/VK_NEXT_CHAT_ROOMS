@@ -65,8 +65,8 @@ var _VKSpaceChat = function (json_params)
 	this.Scenes = [this.Scene, this.CSSScene];
 
 
-	var startexture = new THREE.ImageUtils.loadTexture("models/bg_1_1.png");
-	var ambientlight = new THREE.AmbientLight( 0xffffff, 5 );
+	var startexture = new THREE.ImageUtils.loadTexture("models/skybox_cube_1.png");
+	var ambientlight = new THREE.AmbientLight( 0xffffff, 4 );
 	this.Scene.add(ambientlight);
 
 
@@ -123,7 +123,7 @@ var _VKSpaceChat = function (json_params)
 
 	this.VisavisCounter = {};
 	this.VisavisCounter.Div = document.createElement("div");
-	this.VisavisCounter.Div.appendChild(document.createTextNode("Визави в комнате: 0"));
+	this.VisavisCounter.Div.appendChild(document.createTextNode("Визави: 0"));
 	document.body.appendChild(this.VisavisCounter.Div);
 	this.VisavisCounter.Div.id = "VisavisCounter";
 	this.VisavisCounter.LastNum = 0;
@@ -249,7 +249,7 @@ _VKSpaceChat.prototype.updateVisavisCounter = function ()
 	if(this.AllUsers[1].length !== this.LastNum)
 	{
 		this.VisavisCounter.Div.removeChild(this.VisavisCounter.Div.firstChild);
-		this.VisavisCounter.Div.appendChild(document.createTextNode("Визави в комнате: " + this.AllUsers[1].length));
+		this.VisavisCounter.Div.appendChild(document.createTextNode("Визави: " + this.AllUsers[1].length));
 		this.LastNum = this.AllUsers[1].length;
 	}
 };
@@ -259,6 +259,10 @@ _VKSpaceChat.prototype.updateVisavisCounter = function ()
 
 _VKSpaceChat.prototype.updateWorkingProcess = function ()
 {
+	if(YouTubePlayer.getVolume() > 10)
+	{
+		YouTubePlayer.setVolume(YouTubePlayer.getVolume() - 1);
+	}
 
 		this.Renderer.render(this.Scene, this.Camera);
 		this.CSSRenderer.render(this.CSSScene, this.Camera);

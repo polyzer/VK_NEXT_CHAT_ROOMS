@@ -10,7 +10,16 @@ var _CollectingObjects = function (scene, LocalBoundingMesh, callback)
 	this.BoundingRadius = 200;
 	this.Callback = callback;
 	this.ObjectsCount = 5;
-	this.OneObjectCost = 1000;
+	this.OneObjectCost = 125;
+
+	this.ObjectsCounter = {
+		LastNum: 0,
+		Div: document.createElement("div")
+	};
+
+	this.ObjectsCounter.Div.appendChild(document.createTextNode(": " + this.ObjectsCounter.LastNum));
+	this.ObjectsCounter.Div.id = "CollectingObjectsCounter";
+	document.body.appendChild(this.ObjectsCounter.Div);
 
 	this.resetColor();
 	this.createObjects();
@@ -34,6 +43,11 @@ _CollectingObjects.prototype.createObjects = function ()
 				new THREE.BoxGeometry(200, 200, 200), 
 				new THREE.MeshStandardMaterial({color: this.Color, opacity: 0.9, transparent: true})
 			);
+		el.add(new THREE.LineSegments( 
+			new THREE.EdgesGeometry( el.geometry ), 
+			new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } )
+		));
+
 		el.position.x = (Math.random()*2 - 1)/2 * WORLD_CUBE.SCALED_SIZE.x;
 		el.position.y = (Math.random()*2 - 1)/2 * WORLD_CUBE.SCALED_SIZE.y;
 		el.position.z = (Math.random()*2 - 1)/2 * WORLD_CUBE.SCALED_SIZE.z;
@@ -63,5 +77,12 @@ _CollectingObjects.prototype.update = function ()
 			this.Objects.splice(i,1);
 			this.Callback(this.OneObjectCost);
 		}
+	}
+
+	if(this.Objects.length !== this.ObjectsCounter.LastNum)
+	{
+		this.ObjectsCounter.Div.removeChild(this.ObjectsCounter.Div.firstChild);
+		this.ObjectsCounter.Div.appendChild(document.createTextNode(": " + this.Objects.length));
+		this.ObjectsCounter.LastNum = this.Objects.length;
 	}
 };

@@ -26,12 +26,12 @@
 
 </head>
 <body>
-<div id="ID_VIEWER" style="position: absolute; left: 0px; top: 0px; z-index: 1000000; background-color: yellow;"></div>
+<!--<div id="ID_VIEWER" style="position: absolute; left: 0px; top: 0px; z-index: 1000000; background-color: yellow;"></div>-->
 <script>
 </script>
 <script>
 
-/*
+
 var player_div = document.createElement("div");
 player_div.setAttribute("id", "player");
 player_div.style.display = "none";
@@ -47,7 +47,7 @@ function onYouTubeIframeAPIReady() {
   YouTubePlayer = new YT.Player('player', {
     height: '390',
     width: '640',
-    videoId: 'VDC9d0PIPGc',
+    videoId: 'bTTy2ymdavY',
     events: {
       'onReady': onPlayerReady
     }
@@ -64,7 +64,6 @@ function onPlayerReady(event) {
 
 
 	window.Peer.on("open", function () {
-		document.getElementById("ID_VIEWER").appendChild(document.createTextNode(window.Peer.id));
 		var MenuObj = new _Menu();
 		YouTubePlayer.setVolume(0);
 		YouTubePlayer.playVideo();
@@ -78,8 +77,8 @@ function onPlayerReady(event) {
 function stopVideo() {
     YouTubePlayer.stopVideo();
 }
-*/
 
+/*
 var ForUpdating = [];		
 var StreamObj = null;
 
@@ -95,6 +94,7 @@ var StreamObj = null;
 		document.getElementById("ID_VIEWER").appendChild(document.createTextNode(window.Peer.id));
 		var MenuObj = new _Menu();
 	});
+*/
 </script>
 <!-- <iframe style="display: none; z-index: -1000;" width="420" height="315" src="https://www.youtube.com/embed/VDC9d0PIPGc?autoplay=1">
 </iframe> -->

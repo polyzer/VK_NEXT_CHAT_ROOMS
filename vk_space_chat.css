@@ -127,7 +127,7 @@ body {
 	width: auto;
 	height: auto;
 
-	background-color: yellow;
+	background-color: #ffcc00;
 	font-size: 40px;	
 	font-family: 'Lobster', cursive;
 	font-color: white;
@@ -148,7 +148,7 @@ body {
 	width: auto;
 	height: auto;
 
-	background-color: yellow;
+	background-color: #ffcc00;
 	font-size: 40px;	
 	font-family: 'Lobster', cursive;
 	font-color: white;
@@ -157,6 +157,7 @@ body {
 	border: 2px solid white;
 	cursor: pointer;
 	z-index: 1000000;
+
 }
 #FindNextButton:hover{
 	background-color: white;
@@ -170,26 +171,44 @@ body {
 }
 #PointsNumber{
 	position: absolute;
-	left: 100px;
-	top: 600px;
+	left: 30px;
+	top: 610px;
 	z-index: 1000000;
+	font-size: 23px;	
+
 }
 
 #VisavisCounter{
 	position: absolute;
-	left: 0px;
+	left: -3px;
 	top: 10px;
 
 	width: auto;
 	height: auto;
 
-	background-color: yellow;
-	font-size: 20px;	
-	font-family: 'Lobster', cursive;
+	background-color: #ffcc00;
+	font-size: 23px;	
 	font-color: white;
 
-	padding: 2px 2px 2px 2px;
-	border: 2px solid white;
+	padding: 3px 3px 3px 7px;
+	border: 2px double white;
 	cursor: pointer;
-	z-index: 1000000;	
+	z-index: 1000000;
+
+	border-radius: 3px;	
 }
+
+#CollectingObjectsCounter{
+	position: absolute;
+	left: 100px;
+	top: 550px;
+
+	background-color: #ffcc00;
+	font-size: 25px;	
+	font-color: white;
+	z-index: 1000000;
+
+	border-right: 2px solid white;
+	border-top: 2px solid white;
+	border-bottom: 2px solid white;
+};

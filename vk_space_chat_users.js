@@ -29,7 +29,7 @@ var _LocalUser = function (json_params)
 		this.VisualKeeper = new _VisualKeeper({scene: this.Scene, camera: this.Camera, user_type: this.UserType});
 		this.Stream = json_params.stream;
 
-		this.Controls = new THREE.FlyControls(this.VisualKeeper.getVideoMesh());
+		this.Controls = new THREE.FlyControls(this.VisualKeeper.getVideoMesh(), document.getElementById("MainContainer"));
 		this.Controls.movementSpeed = 90;
 		this.Controls.rollSpeed = Math.PI / 24;
 		this.Controls.autoForward = false;
@@ -53,11 +53,13 @@ var _LocalUser = function (json_params)
 		this.setPointsCallbackBF
 	);
 	this.VisualKeeper.setTargetMeshByColor(this.CollectingObjects.getColor());
+
 	this.Points = {};
 	this.Points.Div = document.createElement("div");
 	document.body.appendChild(this.Points.Div);
-	this.Points.Div.id = "PointsNumber";
 	this.Points.Num = 0;
+	this.Points.Div.appendChild(document.createTextNode("Очки:" + this.Points.Num));
+	this.Points.Div.id = "PointsNumber";
 	this.updateVisualPoints();
 
 };
@@ -100,7 +102,8 @@ _LocalUser.prototype.hideChatControlsIfItNeed = function ()
 
 _LocalUser.prototype.updateVisualPoints = function ()
 {
-	this.Points.Div.innerHTML = this.Points.Num;
+	this.Points.Div.removeChild(this.Points.Div.firstChild);
+	this.Points.Div.appendChild(document.createTextNode("Очки:" + this.Points.Num));
 };
 _LocalUser.prototype.setRandomMeshPosition = function ()
 {
@@ -201,6 +204,11 @@ _LocalUser.prototype.controlDistance = function ()
 		var distTo = this.VisualKeeper.getVideoMesh().position.distanceTo(this.AllUsers[1][i].getVideoMesh().position);
 		if(distTo <= CONTROL_DISTANCE.VOLUME_RADIUS)
 		{
+			if(!this.AllUsers[1][i].wasBounded())
+			{
+				this.setPointsCallback(200);
+				this.AllUsers[1][i].boundMe();
+			}
 			if(this.AllUsers[1][i].getVolume() !== 1){
 				this.AllUsers[1][i].setVolume(1);
 			}
@@ -226,6 +234,34 @@ _LocalUser.prototype.controlDistance = function ()
 };
 
 
+_LocalUser.prototype.movingControl = function ()
+{
+	if(this.VisualKeeper.getVideoMesh().position.x >= WORLD_CUBE.SCALED_SIZE.x/2){
+		this.VisualKeeper.getVideoMesh().position.x = WORLD_CUBE.SCALED_SIZE.x/2 - 100;
+	}
+
+	if(this.VisualKeeper.getVideoMesh().position.x <= -WORLD_CUBE.SCALED_SIZE.x/2){
+		this.VisualKeeper.getVideoMesh().position.x = -WORLD_CUBE.SCALED_SIZE.x/2 + 100;
+	}
+
+	if(this.VisualKeeper.getVideoMesh().position.y >= WORLD_CUBE.SCALED_SIZE.y/2){
+		this.VisualKeeper.getVideoMesh().position.y = WORLD_CUBE.SCALED_SIZE.y/2 - 100;
+	}
+
+	if(this.VisualKeeper.getVideoMesh().position.y <= -WORLD_CUBE.SCALED_SIZE.y/2){
+		this.VisualKeeper.getVideoMesh().position.y = -WORLD_CUBE.SCALED_SIZE.y/2 + 100;
+	}
+
+	if(this.VisualKeeper.getVideoMesh().position.z >= WORLD_CUBE.SCALED_SIZE.z/2){
+		this.VisualKeeper.getVideoMesh().position.z = WORLD_CUBE.SCALED_SIZE.z/2 - 100;
+	}
+
+	if(this.VisualKeeper.getVideoMesh().position.z <= -WORLD_CUBE.SCALED_SIZE.z/2){
+		this.VisualKeeper.getVideoMesh().position.z = -WORLD_CUBE.SCALED_SIZE.z/2 + 100;
+	}
+
+};
+
 /* Обновляет все необходимые объекты и проводит вычисления
  */
 _LocalUser.prototype.update = function (mult)
@@ -236,6 +272,12 @@ _LocalUser.prototype.update = function (mult)
 	this.sendDataToAllRemoteUsers(this.NetMessagesObject.MoveMessage);	
 	this.controlDistance();
 	this.VisualKeeper.update();
+	this.movingControl();
+/*	
+	document.getElementById("ID_VIEWER").innerHTML = this.VisualKeeper.getVideoMesh().position.x + " " + 
+	this.VisualKeeper.getVideoMesh().position.y + " "
+	 + this.VisualKeeper.getVideoMesh().position.z;
+*/
 //	this.ChatControls.update(this.VisualKeeper.getVideoMesh().position, this.VisualKeeper.getVideoMesh().rotation);
 };
 

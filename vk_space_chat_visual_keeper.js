@@ -25,7 +25,7 @@ var _VisualKeeper = function (json_params)
 		new THREE.EdgesGeometry( this.TargetMesh.geometry ), 
 		new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } )
 	));
-	this.TargetMesh.position.set(-20, -10, -50);
+	this.TargetMesh.position.set(-25, -15, -50);
 	this.VideoMesh = {};
 	this.VideoMesh.Geometry = new THREE.PlaneGeometry(CAMERA_VIDEO_SIZES.SMALL, CAMERA_VIDEO_SIZES.SMALL);
 	this.VideoMesh.Material = null;
@@ -59,7 +59,7 @@ var _VisualKeeper = function (json_params)
 		}
 		if(json_params.texture !== undefined)
 		{
-			this.VideoMesh.Material = new THREE.MeshBasicMaterial( { map: json_params.texture, overdraw: true, side:THREE.DoubleSide, color: 0xff0000 } );
+			this.VideoMesh.Material = new THREE.MeshBasicMaterial( { map: json_params.texture, overdraw: true, side:THREE.DoubleSide, color: 0xffffff } );
 		}
 		if(json_params.vkid !== undefined)
 		{
@@ -89,9 +89,16 @@ var _VisualKeeper = function (json_params)
 		this.VideoMesh.Mesh = new THREE.Mesh(this.VideoMesh.Geometry, this.VideoMesh.Material);
 		this.VideoMeshCaseOpacity = Math.random()*0.2+0.5;
 		this.VideoMesh.Case = new THREE.Mesh(
-			new THREE.BoxGeometry(150, 150, 150), 
+			new THREE.BoxGeometry(180, 180, 180), 
 			new THREE.MeshStandardMaterial({color: 0xffffff*Math.random(), opacity: this.VideoMeshCaseOpacity, transparent: true})
 		);
+
+		this.VideoMesh.Case.add(new THREE.LineSegments( 
+			new THREE.EdgesGeometry( this.VideoMesh.Case.geometry ), 
+			new THREE.LineBasicMaterial( { color: 0xffffff*Math.random(), linewidth: 2 } )
+		));
+
+
 		this.VideoMesh.Case.position.copy(this.VideoMesh.Mesh.position);
 		this.Scene.add(this.VideoMesh.Case);
 		this.Scene.add(this.VideoMesh.Mesh);	
@@ -194,10 +201,19 @@ _VisualKeeper.prototype.setTextureAndUpdateMesh = function (texture)
 	this.VideoMesh.Material = new THREE.MeshBasicMaterial({
 		map: texture, 
 		overdraw: true,
-		side: THREE.BackSide
+		side: THREE.BackSide,
+		color: 0xffffff
 	});
 	
 	this.VideoMesh.Mesh = new THREE.Mesh(this.VideoMesh.Geometry, this.VideoMesh.Material);
+	var tempmesh_1 = new THREE.Mesh(this.VideoMesh.Geometry, new THREE.MeshBasicMaterial({
+		overdraw: true,
+		side: THREE.FrontSide,
+		color: 0xffffff
+	}));
+	tempmesh_1.position.z  = -3;
+	this.VideoMesh.Mesh.add(tempmesh_1);
+
 	this.VideoMesh.Mesh.position.copy(temp_mesh.position);
 	
 	this.Scene.add(this.VideoMesh.Mesh);

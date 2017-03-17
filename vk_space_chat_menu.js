@@ -74,7 +74,7 @@ var _Menu = function (json_params)
 	this.Inputs.GreetingAndAccessAgreement.ObjHTML = document.createElement("div");
 	this.Inputs.GreetingAndAccessAgreement.ObjHTML.id = "greeting_and_access_agreement_div";
 	this.Inputs.GreetingAndAccessAgreement.ObjHTML.innerHTML = 
-	"Здравствуйте!<br /> Чтобы чат заработал, необходимо разрешить доступ к видеокамере и микрофону!";
+	"Здравствуйте!<br /> Для работы приложения, необходимо разрешить доступ к видеокамере и микрофону!";
 	
 	this.Inputs.GreetingAndAccessAgreement.Obj3DCSS = new THREE.CSS3DObject(this.Inputs.GreetingAndAccessAgreement.ObjHTML);
 	this.Inputs.GreetingAndAccessAgreement.Obj3DCSS.position.x = Math.random();
@@ -132,7 +132,7 @@ var _Menu = function (json_params)
 _Menu.prototype.createFlyingObjects = function ()
 {
 	this.FlyingObjects = [];
-	for (var i=0; i<FLYING_OBJECTS.NEAREST_OBJECTS_COUNT; i++)
+	for (var i=0; i<FLYING_OBJECTS.NEAREST_OBJECTS_COUNT_MENU; i++)
 	{
 		var el = new THREE.Mesh(
 				new THREE.BoxGeometry(50, 50, 50), 
@@ -146,7 +146,7 @@ _Menu.prototype.createFlyingObjects = function ()
 		this.Scene.add(el);
 	}
 
-	for(var i=0; i < FLYING_OBJECTS.FARTHER_OBJECTS_COUNT; i++)
+	for(var i=0; i < FLYING_OBJECTS.FARTHER_OBJECTS_COUNT_MENU; i++)
 	{
 		var el = new THREE.Mesh(
 				new THREE.SphereGeometry(10+Math.round(Math.random()*-3), 32, 32), 
@@ -163,7 +163,7 @@ _Menu.prototype.createFlyingObjects = function ()
 
 _Menu.prototype.controlFlyingObjects = function ()
 {
-	for(var i=0; i< FLYING_OBJECTS.NEAREST_OBJECTS_COUNT; i++)
+	for(var i=0; i< FLYING_OBJECTS.NEAREST_OBJECTS_COUNT_MENU; i++)
 	{		
 		if(this.FlyingObjects[i].position.z >= FLYING_OBJECTS.FLYING_MAX_HEIGHT)
 		{
@@ -176,7 +176,7 @@ _Menu.prototype.controlFlyingObjects = function ()
 		}
 	}
 
-	for(var i= FLYING_OBJECTS.NEAREST_OBJECTS_COUNT; i<(FLYING_OBJECTS.NEAREST_OBJECTS_COUNT+FLYING_OBJECTS.FARTHER_OBJECTS_COUNT); i++)
+	for(var i= FLYING_OBJECTS.NEAREST_OBJECTS_COUNT_MENU; i<(FLYING_OBJECTS.NEAREST_OBJECTS_COUNT_MENU+FLYING_OBJECTS.FARTHER_OBJECTS_COUNT_MENU); i++)
 	{		
 		if(this.FlyingObjects[i].position.z >= FLYING_OBJECTS.FARTHER_FLYING_MAX_HEIGHT)
 		{
@@ -205,7 +205,7 @@ _Menu.prototype.onerror = function ()
 _Menu.prototype.showRenouncement = function ()
 {
 	this.Inputs.GreetingAndAccessAgreement.ObjHTML.innerHTML = 
-	"Вы не разрешили доступ к видеокамере и микрофону :( <br /> Приложение не может начать работ...";
+	"Вы не разрешили доступ к видеокамере и микрофону :( <br /> Приложение не может начать работу...";
 };
 
 _Menu.prototype.excess = function ()
@@ -245,12 +245,12 @@ _Menu.prototype.update = function ()
 	{
 		this.Camera.position.x -= 5;				
 	}
-/*
+
 	if(YouTubePlayer.getVolume() < 80)
 	{
 		YouTubePlayer.setVolume(YouTubePlayer.getVolume() + 1);
 	}
-*/
+
 	this.controlFlyingObjects();
 	this.Renderer.render(this.Scene, this.Camera);
 	this.CSSRenderer.render(this.CSSScene, this.Camera);
