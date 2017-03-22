@@ -23,6 +23,7 @@
 <script src="./vk_space_chat_flying_objects.js"></script>
 <script src="./vk_space_chat_user_chat_controls.js"></script>
 <script src="./vk_space_chat_collecting_objects.js"></script>
+<script src="./vk_space_chat_bad_blocks.js"></script>
 
 </head>
 <body>
@@ -31,11 +32,17 @@
 </script>
 <script>
 
-
-var player_div = document.createElement("div");
-player_div.setAttribute("id", "player");
-player_div.style.display = "none";
-document.body.appendChild(player_div);
+/*
+window.globPlayer = {};
+window.globPlayer.ObjHTML = document.createElement("div");
+window.globPlayer.ObjHTML.setAttribute("id", "player");
+document.body.appendChild(window.globPlayer.ObjHTML);
+window.globPlayer.ObjHTML.style.display = "none";
+window.globPlayer.ObjHTML.style.position = "absolute";
+window.globPlayer.ObjHTML.style.zIndex = "1000000";
+window.globPlayer.ObjHTML.style.left = "100px";
+window.globPlayer.ObjHTML.style.top = "100px";
+window.globPlayer.ShowingState = false;
 var tag = document.createElement('script');
 
 tag.src = "https://www.youtube.com/iframe_api";
@@ -45,8 +52,8 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 var YouTubePlayer;
 function onYouTubeIframeAPIReady() {
   YouTubePlayer = new YT.Player('player', {
-    height: '390',
-    width: '640',
+    height: '200',
+    width: '400',
     videoId: 'bTTy2ymdavY',
     events: {
       'onReady': onPlayerReady
@@ -61,8 +68,7 @@ function onPlayerReady(event) {
 		port: PEER_PORT_ADDR, 
 		path: PEER_PATH_ADDR //,debug: true
 	});
-
-
+	
 	window.Peer.on("open", function () {
 		var MenuObj = new _Menu();
 		YouTubePlayer.setVolume(0);
@@ -78,7 +84,22 @@ function stopVideo() {
     YouTubePlayer.stopVideo();
 }
 
-/*
+window.addEventListener("keydown", function (event) {
+	if(event.keyCode === 80)
+	{
+		if(window.globPlayer.ShowingState === false)
+		{
+			$("#player").show("slow");
+			window.globPlayer.ShowingState = true;
+		} else
+		{
+			$("#player").hide("slow");
+			window.globPlayer.ShowingState = false;
+		}
+	}
+});
+*/
+
 var ForUpdating = [];		
 var StreamObj = null;
 
@@ -91,10 +112,9 @@ var StreamObj = null;
 
 
 	window.Peer.on("open", function () {
-		document.getElementById("ID_VIEWER").appendChild(document.createTextNode(window.Peer.id));
-		var MenuObj = new _Menu();
+		window.MenuObj = new _Menu();
 	});
-*/
+
 </script>
 <!-- <iframe style="display: none; z-index: -1000;" width="420" height="315" src="https://www.youtube.com/embed/VDC9d0PIPGc?autoplay=1">
 </iframe> -->

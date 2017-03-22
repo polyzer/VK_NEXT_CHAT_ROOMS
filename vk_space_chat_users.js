@@ -64,9 +64,14 @@ var _LocalUser = function (json_params)
 
 };
 
+_LocalUser.prototype.getCollectingObjects = function ()
+{
+	return this.CollectingObjects;
+};
+
 _LocalUser.prototype.resetMeForNewRoom = function ()
 {
-	this.Points.Num -= 1000;
+	this.Points.Num -= POINTS.NEXT_ROOM_COST;
 	this.updateVisualPoints();
 	this.CollectingObjects.resetColor();
 	this.CollectingObjects.deleteObjects();
@@ -79,7 +84,17 @@ _LocalUser.prototype.setPointsCallback = function (num)
 {
 	this.Points.Num += num;
 	this.updateVisualPoints();
-	if(this.Points.Num >= 1000)
+	if(this.Points.Num >= POINTS.NEXT_ROOM_COST)
+	{
+		this.showVisualChatControls();
+	}
+};
+
+_LocalUser.prototype.addPoints = function (num)
+{
+	this.Points.Num += num;
+	this.updateVisualPoints();
+	if(this.Points.Num >= POINTS.NEXT_ROOM_COST)
 	{
 		this.showVisualChatControls();
 	}
@@ -220,7 +235,10 @@ _LocalUser.prototype.controlDistance = function ()
 			}
 		}
 		
-		if(distTo <= CONTROL_DISTANCE.CASE_RADIUS)
+		if(distTo <= CONTROL_DISTANCE.CASE_HIDE_RADIUS)
+		{
+			this.AllUsers[1][i].setOpacity(0);			
+		} else if(distTo <= CONTROL_DISTANCE.CASE_RADIUS)
 		{
 			this.AllUsers[1][i].setOpacity(distTo/CONTROL_DISTANCE.CASE_RADIUS*this.AllUsers[1][i].getSourceOpacity());
 		} else
@@ -229,7 +247,7 @@ _LocalUser.prototype.controlDistance = function ()
 			{
 				this.AllUsers[1][i].setOpacity(this.AllUsers[1][i].getSourceOpacity());
 			}
-		}	
+		}
 	}
 };
 

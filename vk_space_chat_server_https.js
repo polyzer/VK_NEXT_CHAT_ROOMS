@@ -306,17 +306,64 @@ function MultiRoom_onFindRoomToMe (req, res)
 
 }
 
+function MultiRoom_onComeToBadRoom (req, res)
+{
+	res.header("Access-Control-Allow-Origin", ACCESS_CONTROL_ALLOW_ORIGIN);
+	res.header("Access-Control-Allow-Headers", ACCESS_CONTROL_ALLOW_HEADERS);  
+	res.send();
+	for(var i=0; i < AllUsers.length; i++)
+	{
+		if(AllUsers[i].ID === req.body.user_id)
+		{
+			if(AllUsers[i].CurrentRoomID === null)
+			{
+				console.log(req.body.user_id + " was not spliced from AllUsers.")
+				return;
+			}else
+			{
+				console.log("NOT NULL: " + AllUsers[i].CurrentRoomID);
+				for( var j=0; j< Rooms.length; j++)
+				{
+					if(Rooms[j].RoomID === AllUsers[i].CurrentRoomID)
+					{
+						for (var k=0; k< Rooms[j].UsersIDSArray.length; k++)
+						{
+							if(Rooms[j].UsersIDSArray[k] === req.body.user_id)
+							{
+								Rooms[j].UsersIDSArray.splice(k, 1);
+								if(Rooms[j].UsersIDSArray.length === 0)
+								{
+									Rooms.splice(j, 1);
+								}
+								AllUsers[i].LastRoomID = AllUsers[i].CurrentRoomID;
+								AllUsers[i].CurrentRoomID = null;
+								console.log(req.body.user_id + " was spliced from Room, but not deleted");
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+//	throw new Error(id + " wasn't in any array");
+	console.log(req.body.user_id + " wasn't in any array");
+
+
+};
 
 var ServiceFunctions = {};
-
 ServiceFunctions.onConnect = MultiRoom_onConnect;
 ServiceFunctions.onDisconnect = MultiRoom_onDisconnect;
 ServiceFunctions.onComeIntoRoom = MultiRoom_onComeIntoRoom;
 ServiceFunctions.onFindRoomToMe = MultiRoom_onFindRoomToMe;
+ServiceFunctions.onComeToBadRoom = MultiRoom_onComeToBadRoom;
 
 /*Если пользователь решил выйти из в основное меню*/
 app.post("/" + const_and_funcs.REQUESTS.UTOS.FIND_ROOM_TO_ME, ServiceFunctions.onFindRoomToMe);
 app.post("/" + const_and_funcs.REQUESTS.UTOS.COME_INTO_ROOM, ServiceFunctions.onComeIntoRoom);
+app.post("/" + const_and_funcs.REQUESTS.UTOS.ON_COME_TO_BAD_ROOM, ServiceFunctions.onComeToBadRoom);
 /*При создании соединения, игрок автоматически добавляеся в список
  *неопределившихся игроков;
  **/

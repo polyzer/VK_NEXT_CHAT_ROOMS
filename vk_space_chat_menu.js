@@ -245,12 +245,12 @@ _Menu.prototype.update = function ()
 	{
 		this.Camera.position.x -= 5;				
 	}
-
+/*
 	if(YouTubePlayer.getVolume() < 80)
 	{
 		YouTubePlayer.setVolume(YouTubePlayer.getVolume() + 1);
 	}
-
+*/
 	this.controlFlyingObjects();
 	this.Renderer.render(this.Scene, this.Camera);
 	this.CSSRenderer.render(this.CSSScene, this.Camera);
@@ -263,10 +263,6 @@ _Menu.prototype.update = function ()
 	
 	if(this.updating === true)
 		requestAnimationFrame(this.updateBF);
-	else
-	{
-		delete this.FlyingObjects;
-	}
 };
 /*Инициализация при многокомнатном режиме*/
 _Menu.prototype.initMultiRoomMode = function ()
@@ -400,11 +396,20 @@ _Menu.prototype.onStartButtonClick = function ()
 	if(this.canStart() === true)
 	{
 		this.updating = false;
-		window.SpaceChat = new _VKSpaceChat({
-			camera: this.Camera,
-			renderer: this.Renderer,
-			cssrenderer: this.CSSRenderer
-		});
+		if(window.VKSpaceChat === undefined)
+		{
+			window.VKSpaceChat = new _VKSpaceChat({
+				camera: this.Camera,
+				renderer: this.Renderer,
+				cssrenderer: this.CSSRenderer
+			});
+		} else
+		{
+			$("#MenuContainer").css("zIndex", "0");
+			$("#MainContainer").show();
+			$("#MenuContainer").hide();
+			window.VKSpaceChat.restart();	
+		}
 	}
 };
 

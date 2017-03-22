@@ -59,7 +59,8 @@ var CAMERA_PARAMETERS = {
 
 var CONTROL_DISTANCE = {
 	VOLUME_RADIUS: 1000,
-	CASE_RADIUS: 2000
+	CASE_RADIUS: 2000,
+	CASE_HIDE_RADIUS: 600
 };
 
 var REQUESTS = {
@@ -67,7 +68,8 @@ var REQUESTS = {
 		COME_INTO_ROOM: "come_into_room",
 		LEAVE_ROOM: "leave_room",
 		CREATE_ROOM: "create_room",	
-		FIND_ROOM_TO_ME: "find_room_to_me"
+		FIND_ROOM_TO_ME: "find_room_to_me",
+		ON_COME_TO_BAD_ROOM: "on_come_to_bad_room"
 	},
 	UTOU: {
 		MOVE: "move",
@@ -148,6 +150,13 @@ var FLYING_OBJECTS = {
 	MAX_SPEED: 30
 };
 
+var BAD_SCENE = {
+	OBJECTS_SPEED: 30
+};
+
+var POINTS = {
+	NEXT_ROOM_COST: 1000
+};
 
 /* генерирует рандомную строку заданной длины
  */

@@ -10,7 +10,7 @@ var _CollectingObjects = function (scene, LocalBoundingMesh, callback)
 	this.BoundingRadius = 200;
 	this.Callback = callback;
 	this.ObjectsCount = 5;
-	this.OneObjectCost = 125;
+	this.OneObjectCost = 200;
 
 	this.ObjectsCounter = {
 		LastNum: 0,
@@ -25,6 +25,20 @@ var _CollectingObjects = function (scene, LocalBoundingMesh, callback)
 	this.createObjects();
 };
 
+_CollectingObjects.prototype.setOneObjectCost = function (cost)
+{
+	this.OneObjectCost = cost;
+};
+
+_CollectingObjects.prototype.setScene = function (scene)
+{
+	this.Scene = scene;
+};
+_CollectingObjects.prototype.getScene = function ()
+{
+	return this.Scene;
+};
+
 _CollectingObjects.prototype.getColor = function ()
 {
 	return this.Color;
@@ -37,6 +51,7 @@ _CollectingObjects.prototype.resetColor = function ()
 
 _CollectingObjects.prototype.createObjects = function ()
 {
+
 	for (var i=0; i< this.ObjectsCount; i++)
 	{
 		var el = new THREE.Mesh(

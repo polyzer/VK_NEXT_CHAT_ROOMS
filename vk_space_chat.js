@@ -10,12 +10,13 @@ var _VKSpaceChat = function (json_params)
 	this.onRecieveMediaConnectionBF = this.onRecieveMediaConnection.bind(this);
 	this.onFindNewRoomBF = this.onFindNewRoom.bind(this);
 	this.resetWorldAndCreateUsersByExistingConnectionsBF = this.resetWorldAndCreateUsersByExistingConnections.bind(this);
+	this.onGameEndingBF = this.onGameEnding.bind(this);
 
 	this.Renderer = null;
 	this.CSSRenderer = null;
 	this.Camera = null;
-
-
+	this.updating = true;
+/*
 	if(json_params !== undefined)
 	{
 		if(json_params.renderer !== undefined)
@@ -32,6 +33,7 @@ var _VKSpaceChat = function (json_params)
 			this.Camera.position.set(0,0,0);
 		}
 	}
+*/
 	// подготовка
 	this.Container = document.createElement("div");
 	this.Container.tabindex = 1;
@@ -62,22 +64,37 @@ var _VKSpaceChat = function (json_params)
 
 	this.Scene = new THREE.Scene();
 	this.CSSScene = new THREE.Scene();
-	this.Scenes = [this.Scene, this.CSSScene];
+	this.BadScene = new THREE.Scene();
+	this.Scenes = [this.Scene, this.CSSScene, this.BadScene];
 
 
-	var startexture = new THREE.ImageUtils.loadTexture("models/skybox_cube_1.png");
-	var ambientlight = new THREE.AmbientLight( 0xffffff, 4 );
-	this.Scene.add(ambientlight);
+	this.ambientlight = new THREE.AmbientLight( 0xffffff, 4 );
+
+	this.BadScene.add(this.ambientlight);
+	this.Scene.add(this.ambientlight);
 
 
 	this.SkyBox = {};
 	this.SkyBox.Geometry = new THREE.BoxGeometry(WORLD_CUBE.SIZE.x, WORLD_CUBE.SIZE.y, WORLD_CUBE.SIZE.z);
 	this.SkyBox.Geometry.scale(WORLD_CUBE.SCALE.x, WORLD_CUBE.SCALE.y, WORLD_CUBE.SCALE.z);
-	this.SkyBox.Material = new THREE.MeshStandardMaterial({map: startexture, side: THREE.BackSide});
+	this.SkyBox.Material = new THREE.MeshStandardMaterial({
+		map: new THREE.ImageUtils.loadTexture("models/skybox_cube_1.png"), 
+		side: THREE.BackSide
+	});
 	this.SkyBox.Mesh = new THREE.Mesh(this.SkyBox.Geometry, this.SkyBox.Material);
-	this.Scene.add(this.SkyBox.Mesh);																						
+	this.Scene.add(this.SkyBox.Mesh);
 
-	this.FlyingObjects = new _FlyingObjects(this.Scene);																					
+	this.BadSkyBox = {};
+	this.BadSkyBox.Geometry = new THREE.BoxGeometry(WORLD_CUBE.SIZE.x, WORLD_CUBE.SIZE.y, WORLD_CUBE.SIZE.z);
+	this.BadSkyBox.Geometry.scale(WORLD_CUBE.SCALE.x, WORLD_CUBE.SCALE.y, WORLD_CUBE.SCALE.z);
+	this.BadSkyBox.Material = new THREE.MeshStandardMaterial({
+		map: new THREE.ImageUtils.loadTexture("models/bad_sky_box.png"), 
+		side: THREE.BackSide
+	});	
+	this.BadSkyBox.Mesh = new THREE.Mesh(this.BadSkyBox.Geometry, this.BadSkyBox.Material);
+	this.BadScene.add(this.BadSkyBox.Mesh);
+
+	this.FlyingObjects = new _FlyingObjects(this.Scene);
 	
 	this.Container.appendChild(this.Renderer.domElement);
 
@@ -85,6 +102,9 @@ var _VKSpaceChat = function (json_params)
 	this.CSSRenderer.domElement.style.position = "absolute";
 	this.CSSRenderer.domElement.style.top = 0;
 	this.Container.appendChild(this.CSSRenderer.domElement);
+
+	this.Stand = new THREE.Mesh(new THREE.BoxGeometry(1000, 80, 1000), new THREE.MeshStandardMaterial({transparent: true, opacity: 0.8}));
+	this.Scene.add(this.Stand);
 
 	this.Clock = new THREE.Clock();
 	
@@ -127,6 +147,7 @@ var _VKSpaceChat = function (json_params)
 	document.body.appendChild(this.VisavisCounter.Div);
 	this.VisavisCounter.Div.id = "VisavisCounter";
 	this.VisavisCounter.LastNum = 0;
+	this.VisavisCounter.MeshesArray = [];
 
 	this.Time = Date.now();
 	this.onOpenInitAndStartGame();
@@ -163,8 +184,10 @@ _VKSpaceChat.prototype.onOpenInitAndStartGame = function (e)
 		cssscene: this.CSSScene,
 		chat_controls_callback_bf: this.onFindNewRoomBF
 	});
+
 	this.AllUsers.push(this.LocalUser);
 	this.AllUsers.push(this.RemoteUsers);
+	this.BadBlocks = new _BadBlocks(this.BadScene, this.AllUsers[0].getVisualKeeper().getVideoMesh(), this.onGameEndingBF);
 
 	this.getAndSetInitConnections();
 
@@ -172,20 +195,82 @@ _VKSpaceChat.prototype.onOpenInitAndStartGame = function (e)
 
 }
 
+_VKSpaceChat.prototype.onGameEnding = function ()
+{
+	cancelAnimationFrame(this.requestID);
+	this.updating = false;
+	window.MenuObj.updating = true;
+	$("#MenuContainer").css("zIndex", "1111111");
+	$("#MainContainer").hide();
+	$("#MenuContainer").show();
+
+	window.MenuObj.updateBF();
+};
+
+_VKSpaceChat.prototype.restart = function ()
+{
+	this.updating = true;
+	this.AllUsers[0].addPoints(POINTS.NEXT_ROOM_COST);
+	this.onFindNewRoom();
+	this.startWorkingProcess();
+};
+
 _VKSpaceChat.prototype.onFindNewRoom = function ()
 {
-	var req_str = SERVER_REQUEST_ADDR  + "/" + REQUESTS.UTOS.FIND_ROOM_TO_ME;
-	$.ajax({
-		type:"POST",
-		url: req_str,
-		async: true,
-		data: {user_id: this.Peer.id},
-		success: this.resetWorldAndCreateUsersByExistingConnectionsBF,
-		error: function (jqXHR, textStatus, errorThrown) {
-			alert(textStatus + " " + errorThrown);
+
+	if(Math.random() < 0.5)
+	{
+		if(this.Scene !== this.Scenes[0])
+		{
+			this.Scene = this.Scenes[0];
+			this.Scene.add(this.ambientlight);
+			this.AllUsers[0].getCollectingObjects().deleteObjects();
+			this.AllUsers[0].getCollectingObjects().setScene(this.Scene);
+			this.Scene.add(this.AllUsers[0].getVisualKeeper().getVideoMesh());
 		}
-	});	
+		var req_str = SERVER_REQUEST_ADDR  + "/" + REQUESTS.UTOS.FIND_ROOM_TO_ME;
+		$.ajax({
+			type:"POST",
+			url: req_str,
+			async: true,
+			data: {user_id: this.Peer.id},
+			success: this.resetWorldAndCreateUsersByExistingConnectionsBF,
+			error: function (jqXHR, textStatus, errorThrown) {
+				console.log(textStatus + " " + errorThrown);
+			}
+		});	
+	} else
+	{
+		if(this.Scene !== this.Scenes[2])
+		{
+			this.Scene = this.Scenes[2];
+			this.Scene.add(this.ambientlight);
+			this.AllUsers[0].getCollectingObjects().deleteObjects();
+			this.AllUsers[0].getCollectingObjects().setScene(this.Scene);
+			this.Scene.add(this.AllUsers[0].getVisualKeeper().getVideoMesh());
+		}
+
+		var req_str = SERVER_REQUEST_ADDR  + "/" + REQUESTS.UTOS.ON_COME_TO_BAD_ROOM;
+		$.ajax({
+			type:"POST",
+			url: req_str,
+			async: true,
+			data: {user_id: this.Peer.id},
+			error: function (jqXHR, textStatus, errorThrown) {
+				console.log(textStatus + " " + errorThrown);
+			}
+		});	
+		this.comeToBadRoom();
+	}
 }
+
+_VKSpaceChat.prototype.comeToBadRoom = function ()
+{
+	this.Scene.add(this.AllUsers[0].getVisualKeeper().getVideoMesh());
+	this.disconnectRemoteUsers();
+	this.AllUsers[0].resetMeForNewRoom();
+	this.BadBlocks.resetObjectsPositions();
+};
 
 _VKSpaceChat.prototype.resetWorldAndCreateUsersByExistingConnections = function(json_params)
 {
@@ -246,33 +331,67 @@ _VKSpaceChat.prototype.makeCallsToAllRemoteUsers = function (stream)
 
 _VKSpaceChat.prototype.updateVisavisCounter = function ()
 {
-	if(this.AllUsers[1].length !== this.LastNum)
+	if(this.AllUsers[1].length !== this.VisavisCounter.LastNum)
 	{
-		this.VisavisCounter.Div.removeChild(this.VisavisCounter.Div.firstChild);
+		this.VisavisCounter.Div.removeChild(this.VisavisCounter.Div.firstChild); 
 		this.VisavisCounter.Div.appendChild(document.createTextNode("Визави: " + this.AllUsers[1].length));
-		this.LastNum = this.AllUsers[1].length;
+		this.VisavisCounter.LastNum = this.AllUsers[1].length;
+		while(this.VisavisCounter.MeshesArray.length > 0)
+		{
+			this.AllUsers[0].getVisualKeeper().getVideoMesh().remove(this.VisavisCounter.MeshesArray[0]);
+			this.VisavisCounter.MeshesArray.splice(0,1);
+		}
+		for(var i=0; i< this.AllUsers[1].length; i++)
+		{
+			this.VisavisCounter.MeshesArray.push(this.AllUsers[1][i].getVisualKeeper().TargetMesh);
+			this.VisavisCounter.MeshesArray[i].position.set(-18 + i*5, 19, -50);
+			this.AllUsers[0].getVisualKeeper().getVideoMesh().add(this.VisavisCounter.MeshesArray[i]);
+		}
+	} else
+	{
+		for(var i=0; i< this.VisavisCounter.MeshesArray.length; i++)
+		{
+			this.VisavisCounter.MeshesArray[i].rotation.copy(this.AllUsers[1][i].getVisualKeeper().getVideoMesh().rotation);
+		}		
 	}
 };
 
 /* Важнейшая функция игры, в которой происходит управление и обновление всех систем!!
  */
 
+_VKSpaceChat.prototype.collisionStand = function ()
+{
+	this.Stand.geometry.computeBoundingSphere();
+	this.AllUsers[0].getVideoMesh().geometry.computeBoundingBox();
+	if(this.AllUsers[0].getVideoMesh().geometry.boundingBox.intersectsSphere(this.Stand.geometry.boundingSphere))
+	{
+
+	}
+};
+
 _VKSpaceChat.prototype.updateWorkingProcess = function ()
 {
+/*
 	if(YouTubePlayer.getVolume() > 10)
 	{
 		YouTubePlayer.setVolume(YouTubePlayer.getVolume() - 1);
 	}
-
-		this.Renderer.render(this.Scene, this.Camera);
-		this.CSSRenderer.render(this.CSSScene, this.Camera);
-		this.updateRemoteUsers();
+*/
+	this.Renderer.render(this.Scene, this.Camera);
+	this.CSSRenderer.render(this.CSSScene, this.Camera);
+	this.updateRemoteUsers();
+	if(this.Scene === this.Scenes[0])
+	{
 		this.FlyingObjects.update();
-		this.LocalUser.update(Date.now() - this.Time);
-		this.Time = Date.now();
-		this.updateVisavisCounter();
-
-	  requestAnimationFrame(this.updateWorkingProcessBF);
+	} else
+	{
+		this.BadBlocks.update(Date.now() - this.Time);
+	}
+	this.LocalUser.update(Date.now() - this.Time);
+	this.Time = Date.now();
+	this.updateVisavisCounter();
+	if(this.updating === true)
+		this.requestID = requestAnimationFrame(this.updateWorkingProcessBF);
 }
 
 /* Производит обновление телодвижений удаленных игроков.

@@ -20,12 +20,6 @@ var _VisualKeeper = function (json_params)
 	this.Video.width = CAMERA_VIDEO_SIZES.SMALL;
 	this.Video.height = CAMERA_VIDEO_SIZES.SMALL;
 
-	this.TargetMesh = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshStandardMaterial({color: 0x000000, side: THREE.DoubleSide, }));
-	this.TargetMesh.add(new THREE.LineSegments( 
-		new THREE.EdgesGeometry( this.TargetMesh.geometry ), 
-		new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } )
-	));
-	this.TargetMesh.position.set(-25, -15, -50);
 	this.VideoMesh = {};
 	this.VideoMesh.Geometry = new THREE.PlaneGeometry(CAMERA_VIDEO_SIZES.SMALL, CAMERA_VIDEO_SIZES.SMALL);
 	this.VideoMesh.Material = null;
@@ -73,16 +67,32 @@ var _VisualKeeper = function (json_params)
 		this.VideoMesh.Material = new THREE.MeshBasicMaterial({side:THREE.DoubleSide});			
 	}
 
+
+
 	// Для локального игрока
 	if(this.UserType === USER_TYPES.LOCAL)
 	{
 //		this.VideoMesh.Mesh = new THREE.Mesh(this.VideoMesh.Geometry, this.VideoMesh.Material);		
 //		this.Video.muted = 1;
+
+		this.TargetMesh = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshStandardMaterial({color: 0x000000, side: THREE.DoubleSide, }));
+		this.TargetMesh.add(new THREE.LineSegments( 
+			new THREE.EdgesGeometry( this.TargetMesh.geometry ), 
+			new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } )
+		));
+		this.TargetMesh.position.set(-25, -15, -50);
+
+
 		this.Scene.remove(this.Camera);
 		this.VideoMesh.Mesh = new THREE.Object3D();
 		this.VideoMesh.Mesh.add(this.Camera);
 		this.VideoMesh.Mesh.add(this.TargetMesh);
 		this.Scene.add(this.VideoMesh.Mesh);
+		
+		this.VideoMesh.Mesh.position.x = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.x;
+		this.VideoMesh.Mesh.position.y = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.y;
+		this.VideoMesh.Mesh.position.z = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.z;
+
 //		this.VideoMesh.Mesh = this.Camera;
 	}else if(this.UserType === USER_TYPES.REMOTE)
 	{
@@ -92,11 +102,25 @@ var _VisualKeeper = function (json_params)
 			new THREE.BoxGeometry(180, 180, 180), 
 			new THREE.MeshStandardMaterial({color: 0xffffff*Math.random(), opacity: this.VideoMeshCaseOpacity, transparent: true})
 		);
-
 		this.VideoMesh.Case.add(new THREE.LineSegments( 
 			new THREE.EdgesGeometry( this.VideoMesh.Case.geometry ), 
 			new THREE.LineBasicMaterial( { color: 0xffffff*Math.random(), linewidth: 2 } )
 		));
+
+		this.TargetMesh = new THREE.Mesh(
+			new THREE.BoxGeometry(1, 1, 1), 
+			new THREE.MeshStandardMaterial({
+				color: this.VideoMesh.Case.material.color.getHex(), 
+				side: THREE.DoubleSide, 
+				opacity: this.VideoMesh.Case.material.opacity,
+				transparent: true
+			})
+		);
+		this.TargetMesh.add(new THREE.LineSegments( 
+			new THREE.EdgesGeometry( this.TargetMesh.geometry ), 
+			new THREE.LineBasicMaterial( { color: this.VideoMesh.Case.children[0].material.color.getHex(), linewidth: 2 } )
+		));
+
 
 
 		this.VideoMesh.Case.position.copy(this.VideoMesh.Mesh.position);
