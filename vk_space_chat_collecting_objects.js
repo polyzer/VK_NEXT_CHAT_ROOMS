@@ -51,7 +51,7 @@ _CollectingObjects.prototype.resetColor = function ()
 
 _CollectingObjects.prototype.createObjects = function ()
 {
-
+	this.ObjectsCount = 5 + Math.round(Math.random()*2);
 	for (var i=0; i< this.ObjectsCount; i++)
 	{
 		var el = new THREE.Mesh(

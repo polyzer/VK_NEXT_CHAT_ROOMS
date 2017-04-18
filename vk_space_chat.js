@@ -16,24 +16,6 @@ var _VKSpaceChat = function (json_params)
 	this.CSSRenderer = null;
 	this.Camera = null;
 	this.updating = true;
-/*
-	if(json_params !== undefined)
-	{
-		if(json_params.renderer !== undefined)
-		{
-			this.Renderer = json_params.renderer;
-		}
-		if(json_params.css_renderer !== undefined)
-		{
-			this.CSSRenderer = json_params.css_renderer;
-		}
-		if(json_params.camera !== undefined)
-		{
-			this.Camera = json_params.camera;
-			this.Camera.position.set(0,0,0);
-		}
-	}
-*/
 	// подготовка
 	this.Container = document.createElement("div");
 	this.Container.tabindex = 1;
@@ -53,7 +35,7 @@ var _VKSpaceChat = function (json_params)
 	}
 	if(this.Renderer === null)
 	{
-		this.Renderer = new THREE.WebGLRenderer();
+		this.Renderer = new THREE.WebGLRenderer({antialias: true, shadows: true});
 	}
 	this.Renderer.setSize(CAMERA_PARAMETERS.SCREEN_WIDTH, CAMERA_PARAMETERS.SCREEN_HEIGHT);
 	

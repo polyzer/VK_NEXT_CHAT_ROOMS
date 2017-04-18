@@ -14,6 +14,8 @@ var _Menu = function (json_params)
 	this.onConnectionOpenBF = this.onConnectionOpen.bind(this);
 	this.onerrorBF = this.onerror.bind(this);
 	this.onsuccessBF = this.onsuccess.bind(this);
+	this.onTrainingButtonClickBF = this.onTrainingButtonClick.bind(this);
+	this.onTrainingCloseButtonClickBF = this.onTrainingCloseButtonClick.bind(this);
 		/*END OF FUNCTIONS BINDS
 		 */	
 	
@@ -103,8 +105,20 @@ var _Menu = function (json_params)
 	this.Inputs.StartProgButton.Obj3DCSS.position.x = 0;
 	this.Inputs.StartProgButton.Obj3DCSS.position.y = -200;
 	
-	this.Inputs.KEKButton = document.createElement("input");
-//	this.MessagingWindow = new _ChatModule({scene: this.CSSScene});
+	this.Inputs.TrainingButton = {};
+	this.Inputs.TrainingButton.ObjHTML = document.createElement("div");
+	this.Inputs.TrainingButton.ObjHTML.id = "training_button";
+	this.Inputs.TrainingButton.ObjHTML.innerHTML = "Обучение";	
+	this.Inputs.TrainingButton.ObjHTML.onclick = this.onTrainingButtonClickBF;
+
+
+	this.Inputs.TrainingButton.Obj3DCSS = new THREE.CSS3DObject(this.Inputs.TrainingButton.ObjHTML);
+	this.Inputs.TrainingButton.Obj3DCSS.position.x = -345;
+	this.Inputs.TrainingButton.Obj3DCSS.position.y = -272;
+
+	this.CSSScene.add(this.Inputs.TrainingButton.Obj3DCSS);
+
+	$("#close_training_page_div_button").on("click", this.onTrainingCloseButtonClickBF);
 
 	this.checkNicknameRegExp = new RegExp("\\w+");	
 	this.Body = new _Body();
@@ -127,6 +141,15 @@ var _Menu = function (json_params)
 		onerror: this.onerrorBF
 	});
 
+};
+
+_Menu.prototype.onTrainingButtonClick = function ()
+{
+	$("#training_page_div").show();
+};
+_Menu.prototype.onTrainingCloseButtonClick = function ()
+{
+	$("#training_page_div").hide();
 };
 
 _Menu.prototype.createFlyingObjects = function ()

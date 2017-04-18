@@ -31,7 +31,7 @@ var _LocalUser = function (json_params)
 
 		this.Controls = new THREE.FlyControls(this.VisualKeeper.getVideoMesh(), document.getElementById("MainContainer"));
 		this.Controls.movementSpeed = 90;
-		this.Controls.rollSpeed = Math.PI / 24;
+		this.Controls.rollSpeed = Math.PI / 42;
 		this.Controls.autoForward = false;
 		this.Controls.dragToLook = false;
 		
@@ -78,6 +78,7 @@ _LocalUser.prototype.resetMeForNewRoom = function ()
 	this.CollectingObjects.createObjects();
 	this.VisualKeeper.setTargetMeshByColor(this.CollectingObjects.getColor());
 	this.hideChatControlsIfItNeed();
+	this.VisualKeeper.getVideoMesh().lookAt(NULL_POINT);
 };
 
 _LocalUser.prototype.setPointsCallback = function (num)

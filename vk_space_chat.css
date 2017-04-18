@@ -46,12 +46,12 @@ body {
 #MenuContainer{
 	position: absolute;
 	left: 0px;
-	right: 0px;
+	top: 0px;
 }
 #MainContainer{
 	position: absolute;
 	left: 0px;
-	right: 0px;
+	top: 0px;
 }
 /*Стиль окна чата!
 */
@@ -220,4 +220,55 @@ body {
 
 	padding: 3px 3px 3px 3px;
 	border-radius: 4px;	
-};
+}
+
+#on_tech_error{
+	position: absolute;
+	left: 100px;
+	top: 100px;
+	width: 400px;
+	height: auto;
+}
+#training_button{
+	height: auto;
+
+ 	text-align: center;
+ 	color: black;
+    font: 20px Verdana;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid black;
+}
+#training_page_div{
+	position:absolute;
+	width: 700px;
+	height: 650px;
+	left: 100px;
+	overflow: auto;
+	padding: 5px 5px 5px 5px;
+	display: none;
+	z-index: 10000000;
+	background-color: #f4f4f4;
+}
+#training_page_div video{
+	margin-left: 40px;
+}
+#training_page_div img{
+	margin-left: 40px;
+}
+#training_page_div *{
+	padding: 5px 5px 5px 5px;
+}
+.p_class{
+	text-align: center;
+	border-top: 3px dashed blue;
+}
+#close_training_page_div_button{
+	background-color: #2ed8db;
+	height: 30px;
+	text-align: center;
+	font-size: 30px;
+	padding-bottom: 15px;
+	cursor: pointer;
+	font-color: white;
+}

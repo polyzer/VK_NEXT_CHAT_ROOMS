@@ -6,7 +6,7 @@ var _FlyingObjects = function (scene)
 	for (var i=0; i<FLYING_OBJECTS.NEAREST_OBJECTS_COUNT; i++)
 	{
 		var el = new THREE.Mesh(
-				new THREE.BoxGeometry(110, 110, 110), 
+				new THREE.BoxGeometry(150, 150, 150), 
 				new THREE.MeshStandardMaterial({color: 0xffffff*Math.random(), opacity: Math.random()*0.2+0.7, transparent: true})
 			);
 		el.position.x = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.x;
@@ -20,7 +20,7 @@ var _FlyingObjects = function (scene)
 	for(var i=0; i < FLYING_OBJECTS.FARTHER_OBJECTS_COUNT; i++)
 	{
 		var el = new THREE.Mesh(
-				new THREE.SphereGeometry(20+Math.round(Math.random()*-3), 32, 32), 
+				new THREE.SphereGeometry(30+Math.round(Math.random()*-3), 32, 32), 
 				new THREE.MeshStandardMaterial({color: 0xd2fff0, opacity: 0.9, transparent: true})
 			);
 		el.position.x = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.x;

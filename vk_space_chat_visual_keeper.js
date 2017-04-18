@@ -84,14 +84,13 @@ var _VisualKeeper = function (json_params)
 
 
 		this.Scene.remove(this.Camera);
-		this.VideoMesh.Mesh = new THREE.Object3D();
-		this.VideoMesh.Mesh.add(this.Camera);
+		this.VideoMesh.Mesh = this.Camera;
 		this.VideoMesh.Mesh.add(this.TargetMesh);
 		this.Scene.add(this.VideoMesh.Mesh);
 		
-		this.VideoMesh.Mesh.position.x = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.x;
-		this.VideoMesh.Mesh.position.y = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.y;
-		this.VideoMesh.Mesh.position.z = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.z;
+		this.VideoMesh.Mesh.position.x = (Math.random()*0.4 - 0.2) * WORLD_CUBE.SCALED_SIZE.x;
+		this.VideoMesh.Mesh.position.y = (Math.random()*0.4 - 0.2) * WORLD_CUBE.SCALED_SIZE.y;
+		this.VideoMesh.Mesh.position.z = (Math.random()*0.4 - 0.2) * WORLD_CUBE.SCALED_SIZE.z;
 
 //		this.VideoMesh.Mesh = this.Camera;
 	}else if(this.UserType === USER_TYPES.REMOTE)
@@ -138,11 +137,13 @@ _VisualKeeper.prototype.setTargetMeshByColor = function (new_color)
 _VisualKeeper.prototype.setRandomPosition = function ()
 {
 	this.VideoMesh.Mesh.position.set(
-		(Math.random()*2 - 1) * WORLD_CUBE.SCALED_SIZE.x, 
-		(Math.random()*2 - 1) * WORLD_CUBE.SCALED_SIZE.y,
-		(Math.random()*2 - 1) * WORLD_CUBE.SCALED_SIZE.z
-	);				
-	this.VideoMesh.Case.position.copy(this.VideoMesh.Mesh.position);
+		(Math.random()*0.4 - 0.2) * WORLD_CUBE.SCALED_SIZE.x, 
+		(Math.random()*0.4 - 0.2) * WORLD_CUBE.SCALED_SIZE.y,
+		(Math.random()*0.4 - 0.2) * WORLD_CUBE.SCALED_SIZE.z
+	);
+
+	if(this.UserType === USER_TYPES.REMOTE)
+		this.VideoMesh.Case.position.copy(this.VideoMesh.Mesh.position);
 };
 
 
@@ -204,7 +205,21 @@ _VisualKeeper.prototype.removeFromScene = function ()
 
 _VisualKeeper.prototype.setVideoTextureByStream = function (stream)
 {
-		this.Video.srcObject = stream;
+	if(window.isUsingPlugin === true)
+	{
+		this.Video.style.position = "absolute";
+		this.Video.style.zIndex = -1000;
+		document.body.appendChild(this.Video);
+		this.Video = attachMediaStream(this.Video, stream);
+		this.Video.style.position = "absolute";
+		this.Video.style.zIndex = -1000;
+		this.Video.autoplay = 1;
+		this.Video.width = CAMERA_VIDEO_SIZES.SMALL;
+		this.Video.height = CAMERA_VIDEO_SIZES.SMALL;
+	} else
+	{
+		this.Video.srcObject = stream;		
+	}
 		this.Video.volume = 0;
 
 		this.VideoTexture = new THREE.VideoTexture( this.Video);

@@ -57,9 +57,9 @@ _BadBlocks.prototype.resetObjectsPositions = function ()
 {
 	for(var i=0; i< this.ObjectsArray.length; i++)
 	{
-		this.ObjectsArray[i].position.x = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.x;
-		this.ObjectsArray[i].position.y = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.y;
-		this.ObjectsArray[i].position.z = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.z;
+		this.ObjectsArray[i].position.x = (Math.random()*0.2 + 0.3) * this.getRandomMinusMult() * WORLD_CUBE.SCALED_SIZE.x;
+		this.ObjectsArray[i].position.y = (Math.random()*0.2 + 0.3) * this.getRandomMinusMult() * WORLD_CUBE.SCALED_SIZE.y;
+		this.ObjectsArray[i].position.z = (Math.random()*0.2 + 0.3) * this.getRandomMinusMult() * WORLD_CUBE.SCALED_SIZE.z;
 	}
 };
 
@@ -67,12 +67,12 @@ _BadBlocks.prototype.createObjects = function ()
 {
 
 	var materials = [
-	    new THREE.MeshStandardMaterial( { color: 0xff0000 } ), // right
-	    new THREE.MeshStandardMaterial( { color: 0x0000ff } ), // left
-	    new THREE.MeshStandardMaterial( { color: 0x00ff00 } ), // top
-	    new THREE.MeshStandardMaterial( { color: 0xffff00 } ), // bottom
+	    new THREE.MeshStandardMaterial( { color: 0x000000 } ), // right
+	    new THREE.MeshStandardMaterial( { color: 0x000000 } ), // left
+	    new THREE.MeshStandardMaterial( { color: 0x000000 } ), // top
+	    new THREE.MeshStandardMaterial( { color: 0x000000 } ), // bottom
 	    new THREE.MeshStandardMaterial( { map: THREE.ImageUtils.loadTexture('./models/bad_block_256.png') } ), // back
-	    new THREE.MeshStandardMaterial( { color: 0x00ffff } )  // front
+	    new THREE.MeshStandardMaterial( { color: 0x000000 } )  // front
 	];
 
 	var tMesh = new THREE.Mesh(
@@ -83,20 +83,31 @@ _BadBlocks.prototype.createObjects = function ()
 	for (var i=0; i< 40; i++)
 	{
 		var el = tMesh.clone();
-		el.position.x = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.x;
-		el.position.y = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.y;
-		el.position.z = (Math.random() - 0.5) * WORLD_CUBE.SCALED_SIZE.z;
+		el.position.x = (Math.random()*0.2 + 0.3) * this.getRandomMinusMult() * WORLD_CUBE.SCALED_SIZE.x;
+		el.position.y = (Math.random()*0.2 + 0.3) * this.getRandomMinusMult() * WORLD_CUBE.SCALED_SIZE.y;
+		el.position.z = (Math.random()*0.2 + 0.3) * this.getRandomMinusMult() * WORLD_CUBE.SCALED_SIZE.z;
 		el.MoveSpeed = Math.random()*BAD_SCENE.OBJECTS_SPEED;
 		el.RandomMovingTimeBorder = Math.random()*2000+3000;
 		el.MovingTimeCounter = 0;
 		el.TargetMovingTimeBorder = Math.random()*5000+5000;
-		el.MovingType = 0;
+		el.MovingType = 1;
 		el.RandomMovingVector = new THREE.Vector3();
 
 		this.ObjectsArray.push(el);
 		this.Scene.add(el);
 	}
 };
+
+_BadBlocks.prototype.getRandomMinusMult = function ()
+{
+	var multip = -1;
+	if(Math.round(Math.random()) === 1)
+	{
+		multip = multip*multip;
+	}
+	return multip;	
+}
+
 _BadBlocks.prototype.deleteObjects = function ()
 {
 

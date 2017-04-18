@@ -4,8 +4,8 @@
 <meta charset="UTF-8" /> 
 <link rel="stylesheet" href="./vk_space_chat.css" />
 
+<script src="https://cdn.temasys.com.sg/adapterjs/0.14.x/adapter.debug.js"></script>
 <script src='../games_resources/libs/three.js/build/three.min.js'></script>
-<!--<script src='../games_resources/libs/three.js/examples/js/controls/FirstPersonControls.js'></script>-->
 <script src='../games_resources/libs/three.js/examples/js/controls/FlyControls.js'></script>
 <script src='../games_resources/libs/three.js/examples/js/renderers/CSS3DRenderer.js'></script>		 
 <script src="../games_resources/libs/jquery.js"></script>
@@ -26,98 +26,91 @@
 <script src="./vk_space_chat_bad_blocks.js"></script>
 
 </head>
+
 <body>
-<!--<div id="ID_VIEWER" style="position: absolute; left: 0px; top: 0px; z-index: 1000000; background-color: yellow;"></div>-->
+<div id="training_page_div">
+	<div id="close_training_page_div_button">Закрыть</div>
+	<video width=600 height=415 src="./video/vis_a_vis_video.mp4"  controls></video>
+	<p class="p_class">
+		Ваша цель перемещаться между комнатами для общения с другими игроками! Чтобы перейти в следующую комнату, Вам необходимо набрать >= 1000 очков. Чтобы набрать очки можно собирать кубы определенного цвета, которые видите только Вы. Так же очки даются за общение с другими пользователями (нужно прилететь к другому пользователю так близко, пока вы не услышите звук). Все пользователи могут видеть и слышать друг друга, если подлетят на достаточно близкое расстояние. Заводите новых друзей, летайте и развлекайтесь с Визави (Vis-a-Vis).
+	</p>
+	<img src="./models/screens/1_description.png" width=600 height=412 style="left: 50%;" />
+	<p class="p_class">
+		При переходах между комнатами, Вы можете попасть не к другим пользователям, а в комнату со странными злыми существами - Охотниками. Они будут стремиться выбросить Вас из игры! Чтобы не допустить этого, Вам нужно как можно скорее раздобыть >= 1000 очков для перехода в следующую комнату! (и не факт, что Вас снова не забросит к Охотникам :) 
+		Вот так они выглядят:
+	</p>
+	<img src="./models/screens/4.png" width=600 height=412 style="align: center;" />
+	<p class="p_class">
+		Очки начисляются только за сбор кубов того вида, что изображен у Вас на экране внизу! 
+		Таких кубов в одной комнате 5-7.  
+	</p>
+	<p class="p_class">
+		WASD: движение вперед, влево, назад, вправо. Мышка: поворот. 
+		RQ: поворот вокруг оси направления. 
+	</p>
+	<p class="p_class">
+		Shift: Лететь быстро. 
+	</p>
+	<p class="p_class">
+		Других игроков Вы можете распознать по необычной траектории движения, так же у их кубов есть отмечены грани :) 
+	</p>
+	<p class="p_class">
+		Разрешите доступ к видеокамере и микрофону в диалоге выбора, в меню игры. 
+	</p>
+	<p class="p_class">
+		Чтобы собрать куб - пролетите через него! 
+	</p>
+	<p class="p_class">
+		Стоимость куба = 200 очков 
+	</p>
+	<p class="p_class">
+		За вход в зону другого игрока дается так же 200 очков. 
+	</p>
+	<p class="p_class">
+		Когда Вы подлетаете к другому игроку достаточно близко, его куб становится все более прозрачным. На близком расстоянии Вы услышите другого игрока. 
+	</p>
+	<p class="p_class">
+		Разработано с использованием библиотек: Three.js, Peer.js, jQuery
+	</p>
+</div>
+
+
 <script>
-</script>
-<script>
-
-/*
-window.globPlayer = {};
-window.globPlayer.ObjHTML = document.createElement("div");
-window.globPlayer.ObjHTML.setAttribute("id", "player");
-document.body.appendChild(window.globPlayer.ObjHTML);
-window.globPlayer.ObjHTML.style.display = "none";
-window.globPlayer.ObjHTML.style.position = "absolute";
-window.globPlayer.ObjHTML.style.zIndex = "1000000";
-window.globPlayer.ObjHTML.style.left = "100px";
-window.globPlayer.ObjHTML.style.top = "100px";
-window.globPlayer.ShowingState = false;
-var tag = document.createElement('script');
-
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-var YouTubePlayer;
-function onYouTubeIframeAPIReady() {
-  YouTubePlayer = new YT.Player('player', {
-    height: '200',
-    width: '400',
-    videoId: 'bTTy2ymdavY',
-    events: {
-      'onReady': onPlayerReady
-    }
-  });
-}
-
-  // 4. The API will call this function when the video player is ready.
-function onPlayerReady(event) {
-	window.Peer = new Peer({
-		host: PEER_SERVER_ADDR, 
-		port: PEER_PORT_ADDR, 
-		path: PEER_PATH_ADDR //,debug: true
-	});
-	
-	window.Peer.on("open", function () {
-		var MenuObj = new _Menu();
-		YouTubePlayer.setVolume(0);
-		YouTubePlayer.playVideo();
-	});
-
-}
-
-  // 5. The API calls this function when the player's state changes.
-  //    The function indicates that when playing a video (state=1),
-  //    the player should play for six seconds and then stop.
-function stopVideo() {
-    YouTubePlayer.stopVideo();
-}
-
-window.addEventListener("keydown", function (event) {
-	if(event.keyCode === 80)
-	{
-		if(window.globPlayer.ShowingState === false)
-		{
-			$("#player").show("slow");
-			window.globPlayer.ShowingState = true;
-		} else
-		{
-			$("#player").hide("slow");
-			window.globPlayer.ShowingState = false;
-		}
-	}
-});
-*/
-
 var ForUpdating = [];		
 var StreamObj = null;
 
+AdapterJS.webRTCReady(function(isUsingPlugin) {
+
+if(isUsingPlugin === true)
+	window.isUsingPlugin = true;
+
 
 	window.Peer = new Peer({
 		host: PEER_SERVER_ADDR, 
 		port: PEER_PORT_ADDR, 
-		path: PEER_PATH_ADDR //,debug: true
+		path: PEER_PATH_ADDR,
+		debug: true
 	});
 
 
 	window.Peer.on("open", function () {
 		window.MenuObj = new _Menu();
 	});
+	window.Peer.on("error", function (err) {
+		switch(err.type)
+		{
+			case "browser-incompatible":
+				var error_div = document.createElement("div");
+				var text = "Ваш веб-браузер не поддерживает необходимых технологий :( Для работы работы с приложением рекомендуется использовать последнюю версию Google Chrome или Mozilla Firefox ;)";
+				error_div.appendChild(document.createTextNode(text));
+				error_div.setAttribute("id", "on_tech_error");
+				document.body.appendChild(error_div);
+			break;
+		}
+	});
 
+});
 </script>
-<!-- <iframe style="display: none; z-index: -1000;" width="420" height="315" src="https://www.youtube.com/embed/VDC9d0PIPGc?autoplay=1">
-</iframe> -->
 </body>
 </html>
 

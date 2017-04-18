@@ -18,7 +18,7 @@ var MAX_NICKNAME_LENGTH = 15;
 
 
 var PEER_SERVER_ADDR = "www.polyzer.org";
-var PEER_PORT_ADDR = "9005";
+var PEER_PORT_ADDR = "9006";
 var PEER_PATH_ADDR = "/vk_vis_rooms";
 var SERVER_REQUEST_ADDR = "https://" + PEER_SERVER_ADDR + ":" + PEER_PORT_ADDR;
 
@@ -241,5 +241,7 @@ if(typeof(exports) !== "undefined")
 		SCALE: new THREE.Vector3(6000, 6000, 6000),
 		SCALED_SIZE: new THREE.Vector3(10*6000, 10*6000, 10*6000)
 	};
+
+	var NULL_POINT = new THREE.Vector3(0,0,0);
 	
 }
