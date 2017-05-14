@@ -78,8 +78,8 @@ var REQUESTS = {
 		GET_NICKNAME: "get_nickname",
 		GET_COMMUNICATION_STATUS: "get_communication_status",
 		SEND_COMMUNICATION_STATUS: "send_communication_status",
-		GET_VKID: "get_vkid",
-		SEND_VKID: "send_vkid",
+		GET_YOUR_VKID: "get_vkid",
+		SEND_MY_VKID: "send_vkid",
 		HIDE_VIDEO: "hide_video",
 		SHOW_VIDEO: "show_video",
 		HIDE_VKID: "hide_vkid",
@@ -88,7 +88,9 @@ var REQUESTS = {
 		CAN_I_CONNECT_TO_YOU: "can_I_connect_to_you",
 		YES_YOU_CAN_CONNECT_TO_ME: "yes_you_can_connect_to_me",
 		NO_YOU_CANT_CONNECT_TO_ME: "no_you_cant_connect_to_me",
-		WE_CAN_START_CHATTING: "we_can_start_chatting"
+		WE_CAN_START_CHATTING: "we_can_start_chatting",
+		GET_YOUR_VISUAL_KEEPER_CASE_MESH_PARAMETERS: "GET_YOUR_CASE_MESH_PARAMETERS",
+		SEND_MY_VISUAL_KEEPER_CASE_MESH_PARAMETERS: "SEND_MY_CASE_MESH_PARAMETERS"
 	}
 };
 

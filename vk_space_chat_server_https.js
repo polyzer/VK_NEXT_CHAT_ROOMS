@@ -11,6 +11,15 @@ var credentials = {
 	key: fs.readFileSync("/etc/apache2/ssl/www_polyzer_org/www.polyzer.org_private.key"),
 	cert: fs.readFileSync("/etc/apache2/ssl/www_polyzer_org/www_polyzer_org.crt")	
 };
+/*
+var mysql  = require('mysql');
+var mysql_connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : '000000',
+  database : 'vk_vis_a_vis_rooms'
+});
+*/
 
 /*
 var util = require('util');
@@ -350,6 +359,26 @@ function MultiRoom_onComeToBadRoom (req, res)
 //	throw new Error(id + " wasn't in any array");
 	console.log(req.body.user_id + " wasn't in any array");
 
+
+};
+
+function MultiRoom_writeUserToDatabase(req, res)
+{
+	res.header("Access-Control-Allow-Origin", ACCESS_CONTROL_ALLOW_ORIGIN);
+	res.header("Access-Control-Allow-Headers", ACCESS_CONTROL_ALLOW_HEADERS);  
+	res.send();
+
+
+};
+/*Проверка, есть ли в базе данных данный пользователь
+IN: {
+	vk_id
+}
+*/
+function MultiRoom_checkUserAndWriteIfItNotExist(req, res)
+{
+	res.header("Access-Control-Allow-Origin", ACCESS_CONTROL_ALLOW_ORIGIN);
+	res.header("Access-Control-Allow-Headers", ACCESS_CONTROL_ALLOW_HEADERS);  
 
 };
 

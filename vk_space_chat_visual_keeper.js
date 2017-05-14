@@ -4,7 +4,8 @@
  IN:
  json_params = {
 	scene: new THREE.Scene(),
-	user_type: {_Local,_Remote}User.UserType
+	user_type: {_Local,_Remote}User.UserType,
+	camera: new THREE.PerspectiveCamera(params);
  };
  * */
 
@@ -151,6 +152,17 @@ _VisualKeeper.prototype.setRandomPosition = function ()
 _VisualKeeper.prototype.update = function ()
 {
 	this.TargetMesh.rotation.y += 0.002;
+};
+/*Устанавливает внешний вид оболочки изображения пользователя*/
+_VisualKeeper.prototype.setSendedCaseViewParameters = function (json_params)
+{
+	this.VideoMesh.Case.material.color.setHex(json_params["face_color"]);
+	this.VideoMesh.Case.children[0].material.color.setHex(json_params["edge_color"]);
+	this.VideoMesh.material.opacity = json_params["opacity"];
+
+	this.TargetMesh.Case.material.color.setHex(json_params["face_color"]);
+	this.TargetMesh.Case.children[0].material.color.setHex(json_params["edge_color"]);
+	this.TargetMesh.material.opacity = json_params["opacity"];	
 };
 
 /* Устанавливает позицию корабля

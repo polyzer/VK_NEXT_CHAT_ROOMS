@@ -16,6 +16,8 @@ var _Menu = function (json_params)
 	this.onsuccessBF = this.onsuccess.bind(this);
 	this.onTrainingButtonClickBF = this.onTrainingButtonClick.bind(this);
 	this.onTrainingCloseButtonClickBF = this.onTrainingCloseButtonClick.bind(this);
+
+	this.onOpenCallFriendsListButtonClickBF = this.onOpenCallFriendsListButtonClick.bind(this);
 		/*END OF FUNCTIONS BINDS
 		 */	
 	
@@ -114,14 +116,31 @@ var _Menu = function (json_params)
 
 	this.Inputs.TrainingButton.Obj3DCSS = new THREE.CSS3DObject(this.Inputs.TrainingButton.ObjHTML);
 	this.Inputs.TrainingButton.Obj3DCSS.position.x = -345;
-	this.Inputs.TrainingButton.Obj3DCSS.position.y = -272;
+	this.Inputs.TrainingButton.Obj3DCSS.position.y = -230;
 
 	this.CSSScene.add(this.Inputs.TrainingButton.Obj3DCSS);
 
 	$("#close_training_page_div_button").on("click", this.onTrainingCloseButtonClickBF);
 
+	if(window.VK_WAS_INIT === true)
+	{
+		this.Inputs.OpenCallFriendsListButton = {};
+		this.Inputs.OpenCallFriendsListButton.ObjHTML = document.createElement("div");
+		this.Inputs.OpenCallFriendsListButton.ObjHTML.id = "OpenCallFriendsListButton";
+		this.Inputs.OpenCallFriendsListButton.ObjHTML.innerHTML = "Пригласить друзей";	
+		this.Inputs.OpenCallFriendsListButton.ObjHTML.onclick = this.onOpenCallFriendsListButtonClickBF;
+
+
+		this.Inputs.OpenCallFriendsListButton.Obj3DCSS = new THREE.CSS3DObject(this.Inputs.OpenCallFriendsListButton.ObjHTML);
+		this.Inputs.OpenCallFriendsListButton.Obj3DCSS.position.x = -296;
+		this.Inputs.OpenCallFriendsListButton.Obj3DCSS.position.y = -272;
+
+		this.CSSScene.add(this.Inputs.OpenCallFriendsListButton.Obj3DCSS);
+
+	}
+
 	this.checkNicknameRegExp = new RegExp("\\w+");	
-	this.Body = new _Body();
+	this.Body = new _Person();
 	this.RoomID = null;
 
 	if(GAME_ROOM_MODE === ROOM_MODE.SINGLE)
@@ -151,6 +170,11 @@ _Menu.prototype.onTrainingCloseButtonClick = function ()
 {
 	$("#training_page_div").hide();
 };
+_Menu.prototype.onOpenCallFriendsListButtonClick = function ()
+{
+	VK.callMethod("showInviteBox");
+};
+
 
 _Menu.prototype.createFlyingObjects = function ()
 {
@@ -424,7 +448,8 @@ _Menu.prototype.onStartButtonClick = function ()
 			window.VKSpaceChat = new _VKSpaceChat({
 				camera: this.Camera,
 				renderer: this.Renderer,
-				cssrenderer: this.CSSRenderer
+				cssrenderer: this.CSSRenderer,
+				person: this.Person
 			});
 		} else
 		{

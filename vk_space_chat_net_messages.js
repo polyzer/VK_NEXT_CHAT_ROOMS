@@ -49,20 +49,6 @@ var _NetMessages = function (json_params)
 		id: json_params.id
 	};
 
-	this.GetVKIDMessage = {
-		request: REQUESTS.UTOU.GET_VKID,
-		data: {
-			my_vkid: "default_id",
-		}
-	};
-
-	this.SendVKIDMessage = {
-		request: REQUESTS.UTOU.SEND_VKID,
-		data: {
-			my_vkid: "default_id"
-		}
-	};
-
     /* Запрос на возможность присоединиться к пользователю!
      sending_time - время, когда сообщение было отослано.
      Предполагается использование для того, если 2 пользователя
@@ -85,9 +71,77 @@ var _NetMessages = function (json_params)
 
 	this.WeCanStartChattingMessage = {
 		request: REQUESTS.UTOU.WE_CAN_START_CHATTING,
-		date: {}
-	}
+		data: {}
+	};
 
+	this.GetYourVisualKeeperCaseMeshParametersMessage = {
+		request: REQUESTS.UTOU.GET_YOUR_VISUAL_KEEPER_CASE_MESH_PARAMETERS,
+		data: {
+			opacity: 0.5,
+			face_color: "#ff0000",
+			edge_color: "#ff0000"
+		} 
+	};
+
+	this.SendMyVisualKeeperCaseMeshParametersMessage = {
+		request: REQUESTS.UTOU.SEND_MY_VISUAL_KEEPER_CASE_MESH_PARAMETERS,
+		data: {
+			opacity: 0.5,
+			face_color: "#ff0000",
+			edge_color: "#ff0000"
+		} 
+	};
+
+	this.GetYourVKIDMessage = {
+		request:  REQUESTS.UTOU.GET_YOUR_VKID,
+		data: {
+			vk_id: 0
+		}
+	};
+
+	this.SendMyVKIDMessage = {
+		request: REQUESTS.UTOU.SEND_MY_VKID,
+		data: {
+			vk_id: 0
+		}
+	};
+
+};
+
+/*
+Функция обновляет свойства объекта this.SendMyVisualKeeperCaseMeshParametersMessage.data на 
+соответствующие из json_params
+*/
+_NetMessages.prototype.setGetYourVisualKeeperCaseMeshParametersDataMessage = function (json_params)
+{
+	for(param in Object.getOwnPropertyNames(this.GetYourVisualKeeperCaseMeshParametersMessage.data))
+	{
+		if(json_params.hasOwnProperty(param))
+		{
+			this.SendMyVisualKeeperCaseMeshParametersMessage.data[param] = json_params[param];
+		} else
+		{
+			console.log("WE HAD UNDEFINED DATA PARAMETER: " + json_params[param]);
+		}
+	}
+};
+
+/*
+Функция обновляет свойства объекта this.SendMyVisualKeeperCaseMeshParametersMessage.data на 
+соответствующие из json_params
+*/
+_NetMessages.prototype.setSendMyVisualKeeperCaseMeshParametersDataMessage = function (json_params)
+{
+	for(param in Object.getOwnPropertyNames(this.SendMyVisualKeeperCaseMeshParametersMessage.data))
+	{
+		if(json_params.hasOwnProperty(param))
+		{
+			this.SendMyVisualKeeperCaseMeshParametersMessage.data[param] = json_params[param];
+		} else
+		{
+			console.log("WE HAD UNDEFINED DATA PARAMETER: " + json_params[param]);
+		}
+	}
 };
 
 _NetMessages.prototype.setNickname = function (json_params)
@@ -117,30 +171,22 @@ json_params{
 	my_vk_id = "string"
 }
 */
-_NetMessages.prototype.setSendVKIDMessageData = function (json_params)
+_NetMessages.prototype.setSendMyVKIDMessage = function (json_params)
 {
 	if(json_params !== undefined)
 	{
-		this.SendVKIDMessage.data.my_vkid = json_params.my_vkid;
+		this.SendMyVKIDMessage.data.vk_id = json_params.vk_id;
 	}
 };
-_NetMessages.prototype.setGetVKIDMessageData = function (json_params)
+
+_NetMessages.prototype.setGetYourVKIDMessage = function (json_params)
 {
 	if(json_params !== undefined)
 	{
-		this.GetVKIDMessage.data.my_vkid = json_params.my_vkid;
+		this.GetYourVKIDMessage.data.vk_id = json_params.vk_id;
 	}
 };
 
-
-/*
-IN: my_vk_id = "string"
-*/
-_NetMessages.prototype.setVKID = function (vkid)
-{
-	this.GetVKIDMessage.data.my_vkid = vkid;
-	this.SendVKIDMessage.data.my_vkid = vkid;
-};
 
 _NetMessages.prototype.setCanIConnectToYouMessageData = function (json_params)
 {

@@ -1,10 +1,15 @@
+<?php 
+	session_start();
+	$_SESSION["vk_vis_a_vis_rooms"]["true_connection"] = "true";
+?>
+
 <!DOCTYPE html>
 <html> 
 <head>
 <meta charset="UTF-8" /> 
 <link rel="stylesheet" href="./vk_space_chat.css" />
 
-<script src="https://cdn.temasys.com.sg/adapterjs/0.14.x/adapter.debug.js"></script>
+<script src="../games_resources/libs/AdapterJS-master/publish/adapter.min.js"></script>
 <script src='../games_resources/libs/three.js/build/three.min.js'></script>
 <script src='../games_resources/libs/three.js/examples/js/controls/FlyControls.js'></script>
 <script src='../games_resources/libs/three.js/examples/js/renderers/CSS3DRenderer.js'></script>		 
@@ -18,13 +23,14 @@
 <script src="./vk_space_chat_users.js"></script>
 <script src="./vk_space_chat_visual_keeper.js"></script>
 <script src="./vk_space_chat_hint.js"></script>
-<script src="./vk_space_chat_body.js"></script>
+<script src="./vk_space_chat_person.js"></script>
 <script src="./vk_space_chat_my_controls.js"></script>
 <script src="./vk_space_chat_flying_objects.js"></script>
 <script src="./vk_space_chat_user_chat_controls.js"></script>
 <script src="./vk_space_chat_collecting_objects.js"></script>
 <script src="./vk_space_chat_bad_blocks.js"></script>
 
+<script src="https://vk.com/js/api/xd_connection.js?2"  type="text/javascript"></script>
 </head>
 
 <body>
@@ -76,8 +82,17 @@
 
 
 <script>
-var ForUpdating = [];		
 var StreamObj = null;
+
+if(typeof(VK) !== "undefined")
+{
+	VK.init(function() { 
+	    window.VK_WAS_INIT = true; 
+	//    createCallFriendsList();
+	}, function() { 
+	    window.VK_WAS_INIT = false;
+	}, '5.63'); 
+}
 
 AdapterJS.webRTCReady(function(isUsingPlugin) {
 

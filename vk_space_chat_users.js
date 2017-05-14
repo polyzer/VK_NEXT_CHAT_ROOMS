@@ -23,7 +23,7 @@ var _LocalUser = function (json_params)
 		this.AllUsers = json_params.all_users;
 		this.NetMessagesObject = json_params.net_messages_object;
 		this.Camera = json_params.camera;
-		this.Body = json_params.body;
+		this.Person = json_params.person;
 		this.Peer = json_params.peer;
 
 		this.VisualKeeper = new _VisualKeeper({scene: this.Scene, camera: this.Camera, user_type: this.UserType});
@@ -62,6 +62,12 @@ var _LocalUser = function (json_params)
 	this.Points.Div.id = "PointsNumber";
 	this.updateVisualPoints();
 
+};
+
+_LocalUser.prototype.getPerson = function ()
+{
+
+	return this.Person;
 };
 
 _LocalUser.prototype.getCollectingObjects = function ()
@@ -356,6 +362,8 @@ var _RemoteUser = function (json_params)
 		this.UserType = USER_TYPES.REMOTE;		
 		this.BoundedStatus = false;
 
+		this.Person = new _Person({UserType: this.UserType});
+
 	if(json_params !== undefined)
 	{
 		this.Scene = json_params.scene;		
@@ -406,7 +414,6 @@ _RemoteUser.prototype.getPeerID = function ()
 _RemoteUser.prototype.onCall = function (call)
 {
 	this.MediaConnection = call;
-
 	this.MediaConnection.on("stream", this.onStreamBF);
 	this.MediaConnection.on("close", this.onMediaConnectionCloseBF);
 	this.MediaConnection.on("error", this.onMediaConnectionErrorBF);
@@ -471,7 +478,7 @@ _RemoteUser.prototype.onConnectionError = function(error)
 {
 	this.disconnect();
 	this.ConnectionStatus = "closed";
-	console.log("Had " + error + " on: " +this.constructor.name + ".onConnectionError()");
+	console.log("Had " + error + " on: " + this.constructor.name + ".onConnectionError()");
 };
 
 _RemoteUser.prototype.removeVisualKeeperFromScene = function ()
@@ -490,33 +497,52 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 		json_params = JSON.parse(json_params);
 	}
 	
-	// если игрок переместился
-	if(json_params.request === "move")
-	{
+
+	switch(json_params.request){
+
+	case REQUESTS.UTOU.MOVE:
 		this.VisualKeeper.setPosition(json_params.data.position);
 		this.VisualKeeper.setRotation(json_params.data.rotation);
-	} else 
-	// если игрок выстрелил
-	if(json_params.request === "shoot")
-	{
+	break;		
+
+	case REQUESTS.UTOU.GET_YOUR_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
+		this.Person.setVisualKeeperCaseMeshParameters(json_params);
+		this.VisualKeeper.setSendedCaseViewParameters(json_params);
+		this.NetMessagesObject.setSendMyVisualKeeperCaseMeshParametersDataMessage(this.AllUsers[0].getPerson().getVideoMeshCaseParametersJSON());
+		this.Connection.send(JSON.stringify(this.NetMessagesObject.SendMyVisualKeeperCaseMeshParametersDataMessage));
+	break;
+
+	case REQUESTS.UTOU.SEND_MY_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
+		this.VisualKeeper.setSendedCaseMeshParameters(json_params);
+		this.AllUsers[0].getUserVKID();
+	break;
+
+	case REQUESTS.UTOU.SHOOT:
 		json_params.data.all_users = this.AllUsers;
 		json_params.data.owner_id = this.ID;
 		this.VisualKeeper.shoot(json_params.data);
-	} else 
-	// если игрок прислал свой Nickname
-	if(json_params.request === "send_nickname")
-	{
+	break;
+
+	case REQUESTS.UTOU.SEND_NICKNAME:
 		this.Nickname = json_params.data.nickname;
 		this.ID = json_params.data.id;
-	} else 
-	// если данный удаленный игрок хочет получить NICKNAME ЛОКАЛЬНОГО ИГРОКА!!!!!!!!!!!!!!!!
-	if(json_params.request === "get_nickname")
-	{
+	break;
+
+	case REQUESTS.UTOU.GET_NICKNAME:
 		this.Nickname = json_params.data.requested_user_nickname;
 		this.ID = json_params.data.requested_user_id;
 		this.Connection.send(JSON.stringify(this.NetMessagesObject.SendNickNameMessage));
+	break;
+
+
+	default:
+		console.log("WTF???");
+	break;
 	}
+
 };
+
+
 
 _RemoteUser.prototype.update = function ()
 {
