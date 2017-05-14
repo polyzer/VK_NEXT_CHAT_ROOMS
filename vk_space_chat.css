@@ -272,3 +272,12 @@ body {
 	cursor: pointer;
 	font-color: white;
 }
+#OpenCallFriendsListButton{
+	height: auto;
+ 	text-align: center;
+ 	color: black;
+    font: 20px Verdana;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid black;
+}

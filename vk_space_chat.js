@@ -279,6 +279,7 @@ _VKSpaceChat.prototype.createUsersByExistingConnections = function (json_params)
 	{
 		json_params = JSON.parse(json_params);
 	}
+	
 	for(var i=0; i<json_params.users_array.length; i++)
 	{
 		// на сервере уже будет установлено наше соединение;
@@ -303,12 +304,24 @@ _VKSpaceChat.prototype.createUsersByExistingConnections = function (json_params)
 */
 _VKSpaceChat.prototype.makeCallsToAllRemoteUsers = function (stream)
 {
+	var ConCounter = 0;
 	for(var i=0; i<this.AllUsers[1].length; i++)
 	{
-		this.AllUsers[1][i].MediaConnection = this.Peer.call(this.AllUsers[1][i].getPeerID(), stream);
-		this.AllUsers[1][i].MediaConnection.on("stream", this.AllUsers[1][i].onStreamBF);
+		if(this.AllUsers[1][i].MediaConnection === null)
+		{
+			this.AllUsers[1][i].MediaConnection = this.Peer.call(this.AllUsers[1][i].getPeerID(), stream);
+			this.AllUsers[1][i].MediaConnection.on("stream", this.AllUsers[1][i].onStreamBF);
+		}else
+			ConCounter++;
 	}
-	
+
+	if(this.AllUsers[1].length !== ConCounter)
+	{
+		setTimeout(this.makeCallsToAllRemoteUsersBF, 1000);
+	}else
+	{
+//		alert("ALLRIGHT!");
+	}
 };
 
 _VKSpaceChat.prototype.updateVisavisCounter = function ()

@@ -406,7 +406,6 @@ _RemoteUser.prototype.getPeerID = function ()
 _RemoteUser.prototype.onCall = function (call)
 {
 	this.MediaConnection = call;
-
 	this.MediaConnection.on("stream", this.onStreamBF);
 	this.MediaConnection.on("close", this.onMediaConnectionCloseBF);
 	this.MediaConnection.on("error", this.onMediaConnectionErrorBF);
