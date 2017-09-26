@@ -261,6 +261,7 @@ _StoreWindow.prototype.setLoadedCustomViewParameters = function (json_params)
 /*Обработчик нажатия на кнопку сохранить*/
 _StoreWindow.prototype.onSave = function ()
 {
+	this.Person.setCaseMeshIndex(this.ShowCaseMeshData.CaseMeshIndex);
 
 	var send_data = "datas=" + JSON.stringify({
 		vk_id: this.Person.getUserVKID(),
@@ -269,7 +270,7 @@ _StoreWindow.prototype.onSave = function ()
 		edge_color: this.CustomizeSection.SetEdgeColorInput.value,
 		date_time: new Date().toISOString().slice(0, 19).replace('T', ' '),
 		open_meshes: this.OpenMeshes,
-		selected_mesh: this.ShowCaseMeshData.CaseMeshIndex,
+		case_mesh_index: this.ShowCaseMeshData.CaseMeshIndex,
 		operation: "save_custom_mesh_view_params"
 	});
 	$.ajax({

@@ -145,10 +145,20 @@ _Person.prototype.saveOpenMeshesToDB = function (json_params)
 
 	});	
 };
+_Person.prototype.setCaseMeshIndex = function (index)
+{
+	this.CaseMeshIndex = index;
+};
+
 /*Ёбаный обработчик успешного сохранения*/
 _Person.prototype.onSaveOpenMeshesToDBSuccess = function (json_params)
 {
 	alert(json_params);
+};
+
+_Person.prototype.saveCustomMeshViewParameters = function (json_params)
+{
+	
 };
 
 /*Загружает сохраненные настройки вида с сервера*/ 

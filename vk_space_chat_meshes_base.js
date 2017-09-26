@@ -265,11 +265,12 @@ _MeshesBase.prototype.getPrevMeshIndexByCurrentMeshIndex = function (index)
 
 _MeshesBase.prototype.getMeshPriceByIndex = function (index)
 {
-	for(var mesh_name in Object.getOwnPropertyNames(this.CaseMeshesWithDescriptions))
+	var keys = Object.keys(this.CaseMeshesWithDescriptions);
+	for(var i=0; i< keys.length; i++)
 	{
-		if(this.CaseMeshesWithDescriptions[mesh_name]["Index"] === index)
+		if(this.CaseMeshesWithDescriptions[keys[i]]["Index"] === index)
 		{
-			return this.CaseMeshesWithDescriptions[mesh_name]["Price"];
+			return this.CaseMeshesWithDescriptions[keys[i]]["Price"];
 		}
 	}
 
@@ -279,11 +280,12 @@ _MeshesBase.prototype.getMeshPriceByIndex = function (index)
 /*Returns copy of the Object by Object Index*/
 _MeshesBase.prototype.getDescriptionByIndex = function (index)
 {
-	for(var mesh_name in Object.getOwnPropertyNames(this.CaseMeshesWithDescriptions))
+	var keys = Object.keys(this.CaseMeshesWithDescriptions);
+	for(var i=0; i< keys.length; i++)
 	{
-		if(this.CaseMeshesWithDescriptions[mesh_name]["Index"] === index)
+		if(this.CaseMeshesWithDescriptions[keys[i]]["Index"] === index)
 		{
-			return this.CaseMeshesWithDescriptions[mesh_name]["Description"];
+			return this.CaseMeshesWithDescriptions[keys[i]]["Description"];
 		}
 	}
 
