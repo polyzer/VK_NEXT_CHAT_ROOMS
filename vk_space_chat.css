@@ -1,0 +1,396 @@
+body {
+	font-family: Verdana;
+
+	user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+}
+#greeting_and_access_agreement_div
+{
+	height: auto;
+	width: 600px;
+	font: bold 30px Verdana;
+	text-align: center;
+	border-top: 5px double black;
+	border-bottom: 5px double black;
+	padding: 10px 10px 10px 10px;
+}
+#start_button{
+	height: auto;
+	padding: 10px 10px 10px 10px;
+	width: 220px;
+ 	text-align: center;
+ 	 background-color: #ccc;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:6px;
+    color: black;
+    font: 50px Verdana;
+    text-decoration: none;
+    cursor: pointer;
+    border: 3px solid black;
+}
+#make_request_button
+{
+	height: auto;
+	padding: 10px 10px 10px 10px;
+	width: 220px;
+ 	text-align: center;
+ 	 background-color: #ccc;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:6px;
+    color: black;
+    font: 50px Verdana;
+    text-decoration: none;
+    cursor: pointer;
+    border: 3px solid black;	
+}
+#nickname_input{
+	width: 300px;
+	font-size: 30px;
+}
+
+#rooms_list_select{
+	width: 300px;
+	font-size: 30px;
+}
+
+#MenuContainer{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+#MainContainer{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+/*Стиль окна чата!
+*/
+#MessagingWindow{
+	width: 200px;
+	height: 500px;
+	background-color: gray;
+	opacity: 0.5;
+
+}
+/**/
+#MessagesView{
+	position: absolute;
+	top: 0%;
+	height: 60%;
+	background-color: green;
+
+	position: absolute;
+	width: 100%;
+	opacity: 0.7;
+	left: 0%;
+}
+#WritingField{
+	position: absolute;
+	height: 30%;
+	top: 60%;
+
+	position: absolute;
+	width: 97%;
+	opacity: 0.7;
+	left: 0%;
+}
+#SendMessageButton{
+	position: absolute;
+	height: 10%;
+	font-size: 30px;
+	top: 90%;
+
+	position: absolute;
+	width: 100%;
+	opacity: 0.7;
+	left: 0%;
+}
+/*Стиль отображения баннера VKID для каждого из пользователей*/
+#VKIDBanner_show{
+	width: 200px;
+	height: 60px;
+	background-color: green;
+	text-align: center;
+
+	font: 30px Verdana;
+	border: 1px solid black;
+	transition: background-color 1s width 1s;
+}
+
+#VKIDBanner_hide{
+	width: 200px;
+	height: 60px;
+	background-color: grey;
+	text-align: center;
+	font: 30px Verdana;
+	border: 1px solid black;
+	transition: background-color 1s width 1s;
+}
+
+#VKIDBanner_finding{
+	width: 200px;
+	height: 60px;
+	background-color: white;
+	text-align: center;
+	font: 30px Verdana;
+	border: 1px solid black;
+	transition: background-color 1s width 1s;
+
+}
+
+/*Стиль 3DCSS кнопки контроля поиска следующего собеседника!*/
+#FindNextButton3DCSS{
+	width: auto;
+	height: auto;
+
+	background-color: #ffcc00;
+	font-size: 40px;	
+	font-family: 'Lobster', cursive;
+	font-color: white;
+
+	padding: 2px 2px 2px 2px;
+	border: 2px solid white;
+	cursor: pointer;
+}
+#FindNextButton3DCSS:hover{
+	background-color: white;
+	transition: background-color 1s;
+}
+#FindNextButton{
+	position: absolute;
+	left: 600px;
+	top: 500px;
+
+	width: auto;
+	height: auto;
+
+	background-color: #ffcc00;
+	font-size: 40px;	
+	font-family: 'Lobster', cursive;
+	font-color: white;
+
+	padding: 2px 2px 2px 2px;
+	border: 2px solid white;
+	cursor: pointer;
+	z-index: 1000000;
+
+}
+#FindNextButton:hover{
+	background-color: white;
+	transition: background-color 1s;
+}
+
+#Vis_a_Vis_Text{
+	background-image: url("models/vis_a_vis_text.png");
+	width: 500px;
+	height: 109px;
+}
+#PointsNumber{
+	position: absolute;
+	left: 30px;
+	top: 610px;
+	z-index: 1000000;
+	font-size: 23px;	
+
+}
+
+#VisavisCounter{
+	position: absolute;
+	left: -3px;
+	top: 10px;
+
+	width: auto;
+	height: auto;
+
+	background-color: #ffcc00;
+	font-size: 23px;	
+	font-color: white;
+
+	padding: 3px 3px 3px 7px;
+	border: 3px solid white;
+	cursor: pointer;
+	z-index: 1000000;
+
+	border-radius: 3px;	
+}
+
+#CollectingObjectsCounter{
+	position: absolute;
+	left: 100px;
+	top: 550px;
+
+	background-color: #ffcc00;
+	font-size: 25px;	
+	font-color: white;
+	z-index: 1000000;
+
+	border-right: 3px solid white;
+	border-top: 3px solid white;
+	border-bottom: 3px solid white;
+
+	padding: 3px 3px 3px 3px;
+	border-radius: 4px;	
+}
+
+#on_tech_error{
+	position: absolute;
+	left: 100px;
+	top: 100px;
+	width: 400px;
+	height: auto;
+}
+#training_button{
+	height: auto;
+
+ 	text-align: center;
+ 	color: black;
+    font: 20px Verdana;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid black;
+}
+#training_page_div{
+	position:absolute;
+	width: 700px;
+	height: 650px;
+	left: 100px;
+	overflow: auto;
+	padding: 5px 5px 5px 5px;
+	display: none;
+	z-index: 10000000;
+	background-color: #f4f4f4;
+}
+#training_page_div video{
+	margin-left: 40px;
+}
+#training_page_div img{
+	margin-left: 40px;
+}
+#training_page_div *{
+	padding: 5px 5px 5px 5px;
+}
+.p_class{
+	text-align: center;
+	border-top: 3px dashed blue;
+}
+#close_training_page_div_button{
+	background-color: #2ed8db;
+	height: 30px;
+	text-align: center;
+	font-size: 30px;
+	padding-bottom: 15px;
+	cursor: pointer;
+	font-color: white;
+}
+#OpenCallFriendsListButton{
+	height: auto;
+ 	text-align: center;
+ 	color: black;
+    font: 20px Verdana;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+#OpenStoreButton{
+	height: auto;
+ 	text-align: center;
+ 	color: black;
+    font: 20px Verdana;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid black;	
+}
+
+#StoreWindowDiv{
+	position: absolute;
+	left: 100px;
+	top: 20px;
+	height: 600px;
+	width: 700px;
+	display: none;
+	background-color: #FFFFFF;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+}
+
+#CloseWindowButton{
+	background-color: #2ed8db;
+	height: 30px;
+	text-align: center;
+	font-size: 30px;
+	padding-bottom: 15px;
+	cursor: pointer;
+	font-color: white;
+}
+
+#UserObjectCustomizeContainer{
+	width: 500px;
+	padding: 20px 20px 20px 20px;
+}
+#UserObjectDescription{
+	width: 500px;
+	padding: 20px 20px 20px 20px;
+}
+
+#CustomizeSectionDiv{
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+	width: 200px;
+	height: auto;
+	margin: auto;
+	align-items: center;
+}
+
+#SaveCustomizeOptionsButton
+{
+	position: absolute;
+	background-color: #2ed8db;
+	width: 100%;
+	height: 30px;
+	text-align: center;
+	padding-bottom: 10px;
+	font-size: 30px;
+	cursor: pointer;
+	font-color: white;
+	bottom: 0px;	
+}
+
+#ShowNextObjectButton{
+	position: absolute;
+	background-image: url("models/left_arrow_next_object_button.png");
+	width: 60px;
+	height: 88px;
+	cursor: pointer;
+	left: 610px;
+	top: 150px;
+}
+
+#ShowPrevObjectButton{
+	position: absolute;
+	background-image: url("models/right_arrow_prev_object_button.png");
+	width: 60px;
+	height: 88px;
+	cursor: pointer;
+	left: 30px;
+	top: 150px;
+}
+
+#BuyObjectButton{
+	position: absolute;
+	background-color: #0081d1;
+	width: 100px;
+	height: 50px;
+	cursor: pointer;
+	left: 30px;
+	top: 150px;
+}
