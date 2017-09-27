@@ -331,15 +331,26 @@ body {
 	font-color: white;
 }
 
-#UserObjectCustomizeContainer{
+#UserObjectPreviewContainer{
 	width: 500px;
 	padding: 20px 20px 20px 20px;
 }
 #UserObjectDescription{
 	width: 500px;
+	height: auto;
+	text-align: center;
 	padding: 20px 20px 20px 20px;
 }
-
+#ViewDescriptionDiv{
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+	width: 200px;
+	height: auto;
+	margin: auto;
+	align-items: center;
+}
 #CustomizeSectionDiv{
 	display: flex;
 	flex-direction: column;
@@ -387,10 +398,20 @@ body {
 
 #BuyObjectButton{
 	position: absolute;
+	left: 200px;
+	top: 400px;
 	background-color: #0081d1;
-	width: 100px;
-	height: 50px;
 	cursor: pointer;
-	left: 30px;
-	top: 150px;
+	padding: 10px 5px 10px 5px;
+	font-size: 40px;
+	color: white;
+	font-family: 'Open Sans', sans-serif;
+	border: 2px solid #0081d1;
+}
+
+#BuyObjectButton:hover {
+	border: 2px solid black;
+	transition-duration: 1s;
+	color: black;
+	background-color: white;
 }

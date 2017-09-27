@@ -55,10 +55,17 @@ var _StoreWindow = function ()
 	/*Окно предпросмотра вида пользовательского Объекта*/
 	this.UserObjectView = {};
 	this.UserObjectView.Scene = new THREE.Scene();
+	
 	this.UserObjectView.Container = document.createElement("div");
-	this.UserObjectView.Container.setAttribute("id", "UserObjectCustomizeContainer");
+	this.UserObjectView.Container.setAttribute("id", "UserObjectPreviewContainer");
+	
 	this.UserObjectView.Description = document.createElement("div");
 	this.UserObjectView.Description.setAttribute("id", "UserObjectDescription");
+	this.UserObjectView.Description.appendChild(document.createTextNode(""));
+
+	this.UserObjectView.ViewDescriptionDiv = document.createElement("div");
+	this.UserObjectView.ViewDescriptionDiv.setAttribute("id", "ViewDescriptionDiv");
+	
 	this.UserObjectView.Renderer = new THREE.WebGLRenderer({antialias: true, shadows: true});
 	this.UserObjectView.Renderer.setSize(500, 300);	
 	this.UserObjectView.WorldBox = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new THREE.MeshStandardMaterial({color: 0xf0f9f0, side: THREE.DoubleSide}));
@@ -81,7 +88,9 @@ var _StoreWindow = function ()
 	this.ShowCaseMeshData = {
 		CaseMesh: null,
 		CaseMeshIndex: 1,
-		Price: 0
+		Price: 0,
+		Description: "Description",
+		Customizable: false
 	};
 
 
@@ -138,8 +147,9 @@ var _StoreWindow = function ()
 	/*Добавляем кнопку закрытия окна магазина*/
 	this.StoreWindowDiv.appendChild(this.CloseWindowButton);
 	/*добавили контейнер для 3d объекта*/
-	this.CustomizeSection.CustomizeSectionDiv.appendChild(this.UserObjectView.Container);
-	this.CustomizeSection.CustomizeSectionDiv.appendChild(this.UserObjectView.Description);	
+	this.UserObjectView.ViewDescriptionDiv.appendChild(this.UserObjectView.Container);
+	this.UserObjectView.ViewDescriptionDiv.appendChild(this.UserObjectView.Description);	
+
 	/*добавили настройку прозрачности*/
 	this.CustomizeSection.CustomizeSectionDiv.appendChild(this.CustomizeSection.SetOpacityRangeLabel);	
 	this.CustomizeSection.CustomizeSectionDiv.appendChild(this.CustomizeSection.SetOpacityRangeInput);
@@ -150,9 +160,11 @@ var _StoreWindow = function ()
 	this.CustomizeSection.CustomizeSectionDiv.appendChild(this.CustomizeSection.SetFaceColorLabel);	
 	this.CustomizeSection.CustomizeSectionDiv.appendChild(this.CustomizeSection.SetFaceColorInput);
 	/*добавили div содержащий настройки кастомизации и */
+	this.StoreWindowDiv.appendChild(this.UserObjectView.ViewDescriptionDiv);
 	this.StoreWindowDiv.appendChild(this.CustomizeSection.CustomizeSectionDiv);
 	/*добавили кнопку сохранения настроек*/
 	this.StoreWindowDiv.appendChild(this.SaveOptionsButton);
+	this.StoreWindowDiv.appendChild(this.PriceLabel);
 
 	document.body.appendChild(this.StoreWindowDiv);
 
@@ -161,7 +173,7 @@ var _StoreWindow = function ()
 /*Обработчик нажатия на кнопку покупки*/
 _StoreWindow.prototype.onBuyObjectButtonClick = function ()
 {
-
+	this.Person.addMeshIndexToOpenMeshesAndSaveToDB(this.ShowCaseMeshData.CaseMeshIndex);
 };
 
 /*Получаем данные из Person и загружаем первоначальный Меш*/
@@ -171,10 +183,16 @@ _StoreWindow.prototype.getCaseMeshFromPersonAndLoadMesh = function ()
 	this.UserObjectView.Scene.remove(this.ShowCaseMeshData.CaseMesh);
 	/*теперь получаем данные от персоны и загружаем меш и данные из МешБейса*/
 	this.ShowCaseMeshData.CaseMeshIndex = this.Person.getCaseMeshIndex();
-	this.ShowCaseMeshData.CaseMesh = this.MeshesBase.getMeshCopyByIndex(this.ShowCaseMeshData.CaseMeshIndex);
-	this.ShowCaseMeshData.Price = this.MeshesBase.getMeshPriceByIndex(this.ShowCaseMeshData.CaseMeshIndex);
+	var tdata = this.MeshesBase.getMeshDataByMeshIndex(this.ShowCaseMeshData.CaseMeshIndex);
+	if(tdata){
+		this.ShowCaseMeshData.CaseMesh = tdata.mesh;
+		this.ShowCaseMeshData.Price = tdata.price;
+		this.ShowCaseMeshData.Description = tdata.description;	
+		this.ShowCaseMeshData.Customizable = tdata.customizable;	
+	}
 	/*обновляем всё, что нужно обновить*/
 	this.updatePriceLabel();
+	this.updateMeshDescription();
 	this.UserObjectView.Scene.add(this.ShowCaseMeshData.CaseMesh);
 };
 
@@ -182,23 +200,82 @@ _StoreWindow.prototype.updatePriceLabel = function ()
 {
 	this.PriceLabel.firstChild.data = this.ShowCaseMeshData.Price;
 };
+_StoreWindow.prototype.updateMeshDescription = function ()
+{
+	this.UserObjectView.Description.firstChild.data = this.ShowCaseMeshData.Description;
+};
+/*
+	Функция добавляет или удаляет кнопку покупки Меша в зависимости от того,
+	куплен он уже или нет.
+*/
+_StoreWindow.prototype.toggleBuyButtonIfMeshWasBought = function (index)
+{
+	if(!arguments[0])
+		var index = this.ShowCaseMeshData.CaseMeshIndex;
 
+	if(!this.Person.isMeshIndexInOpenMeshes(index))
+	{
+		if(!this.StoreWindowDiv.contains(this.BuyObjectButton))
+			this.StoreWindowDiv.appendChild(this.BuyObjectButton, this.SaveOptionsButton);
+	} else
+	{
+		if(this.StoreWindowDiv.contains(this.BuyObjectButton))
+			this.StoreWindowDiv.removeChild(this.BuyObjectButton);		
+	}
+
+}
+/*
+	Функция добавляет или удаляет кнопку покупки Меша в зависимости от того,
+	куплен он уже или нет.
+*/
+_StoreWindow.prototype.controlCustomizeSection = function ()
+{
+	if(this.ShowCaseMeshData.Customizable)
+	{
+		if(!this.StoreWindowDiv.contains(this.CustomizeSection.CustomizeSectionDiv))
+			this.StoreWindowDiv.appendChild(this.CustomizeSection.CustomizeSectionDiv);
+	} else
+	{
+		if(this.StoreWindowDiv.contains(this.CustomizeSection.CustomizeSectionDiv))
+			this.StoreWindowDiv.removeChild(this.CustomizeSection.CustomizeSectionDiv);
+	}
+
+}
 /*Обработчик нажатия на кнопку обзора предыдущего объекта*/
 _StoreWindow.prototype.onShowPrevObjectButtonClick = function ()
 {
 	this.UserObjectView.Scene.remove(this.ShowCaseMeshData.CaseMesh);
 	this.ShowCaseMeshData.CaseMeshIndex = this.MeshesBase.getPrevMeshIndexByCurrentMeshIndex(this.ShowCaseMeshData.CaseMeshIndex);
-	this.ShowCaseMeshData.CaseMesh = this.MeshesBase.getMeshCopyByIndex(this.ShowCaseMeshData.CaseMeshIndex);
+	var tdata = this.MeshesBase.getMeshDataByMeshIndex(this.ShowCaseMeshData.CaseMeshIndex);
+	if(tdata){
+		this.ShowCaseMeshData.CaseMesh = tdata.mesh;
+		this.ShowCaseMeshData.Price = tdata.price;
+		this.ShowCaseMeshData.Description = tdata.description;	
+		this.ShowCaseMeshData.Customizable = tdata.customizable;	
+	}
 	this.UserObjectView.Scene.add(this.ShowCaseMeshData.CaseMesh);
+	this.toggleBuyButtonIfMeshWasBought(this.ShowCaseMeshData.CaseMeshIndex);
+	this.updatePriceLabel();
+	this.updateMeshDescription();
+	this.controlCustomizeSection();
 };
-
 /*Обработчик нажатия на кнопку обзора следующего объекта*/
 _StoreWindow.prototype.onShowNextObjectButtonClick = function ()
 {
 	this.UserObjectView.Scene.remove(this.ShowCaseMeshData.CaseMesh);
 	this.ShowCaseMeshData.CaseMeshIndex = this.MeshesBase.getNextMeshIndexByCurrentMeshIndex(this.ShowCaseMeshData.CaseMeshIndex);
-	this.ShowCaseMeshData.CaseMesh = this.MeshesBase.getMeshCopyByIndex(this.ShowCaseMeshData.CaseMeshIndex);
+	var tdata = this.MeshesBase.getMeshDataByMeshIndex(this.ShowCaseMeshData.CaseMeshIndex);
+	if(tdata){
+		this.ShowCaseMeshData.CaseMesh = tdata.mesh;
+		this.ShowCaseMeshData.Price = tdata.price;
+		this.ShowCaseMeshData.Description = tdata.description;		
+		this.ShowCaseMeshData.Customizable = tdata.customizable;	
+	}
 	this.UserObjectView.Scene.add(this.ShowCaseMeshData.CaseMesh);
+	this.toggleBuyButtonIfMeshWasBought(this.ShowCaseMeshData.CaseMeshIndex);
+	this.updatePriceLabel();
+	this.updateMeshDescription();
+	this.controlCustomizeSection();
 };
 
 _StoreWindow.prototype.getOpenStoreWindowListener = function ()

@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8" /> 
 <link rel="stylesheet" href="./vk_space_chat.css" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
 <script src="../games_resources/libs/AdapterJS-master/publish/adapter.min.js"></script>
 <script src='../games_resources/libs/three.js-87/build/three.min.js'></script>

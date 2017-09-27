@@ -61,18 +61,37 @@ var _Person = function (json_params)
 
 };
 
-_Person.prototype.checkMeshIndexInOpenMeshes = function (mesh_index)
+/*
+	Проверяет наличие Меша в открытых, т.е. куплен ли Меш, или нет.
+*/
+_Person.prototype.isMeshIndexInOpenMeshes = function (index)
 {
 	for(var i=0; i< this.OpenMeshes.length; i++)
 	{
 		if(this.OpenMeshes[i] === mesh_index)
 		{
-			throw new Error("Этот Меш уже был куплен!");
-		} else
-		{
-			this.OpenMeshes.push(mesh_index);
+			return true;
 		}
 	}
+	return false;
+};
+/**
+	Добавляет индекс Меша в открытые меши.
+	После чего должен сохранять его в DB.
+*/
+_Person.prototype.addMeshIndexToOpenMeshesAndSaveToDB = function (mesh_index)
+{
+	for(var i=0; i< this.OpenMeshes.length; i++)
+	{
+		if(this.OpenMeshes[i] === mesh_index)
+		{
+			throw new Error("That Mesh was buying!");
+			return;
+		}
+	}
+	
+	this.OpenMeshes.push(mesh_index);
+	this.saveOpenMeshesToDB();
 };
 
 /*устанавливает параметры передаваемые сообщением REQUESTS.UTOU.GetYourFullDataMessage | REQUESTS.UTOU.SendMyFullDataMessage*/
@@ -117,21 +136,21 @@ json_params: {
 	open_meshes: []
 }
 */
-_Person.prototype.saveOpenMeshesToDB = function (json_params)
+_Person.prototype.saveOpenMeshesToDB = function ()
 {
-	this.topen_meshes = "";
-	for(var i=0; i< json_params.open_meshes.length; i++)
+	var topen_meshes = "";
+	for(var i=0; i< this.OpenMeshes.length; i++)
 	{
-		this.topen_meshes += json_params.open_meshes[i];
-		if(i !== (json_params.open_meshes.length - 1))
+		topen_meshes += this.OpenMeshes[i];
+		if(i !== (this.OpenMeshes.length - 1))
 		{
-			this.topen_meshes += ",";
+			topen_meshes += ",";
 		}
 	}
 	var send_data = "datas=" + JSON.stringify({
 		operation: "save_open_meshes",
 		vk_id: this.Person.getUserVKID(),
-		open_meshes: this.topen_meshes
+		open_meshes: topen_meshes
 	});
 
 	$.ajax({

@@ -104,14 +104,16 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 			TargetMesh: this.TargetCubeMesh,
 			Description: "THERE IS DESCRIPTION",
 			Index: CASE_MESHES_INDEXES.CUBE,
-			Price: 0
+			Price: 0,
+			Customizable: true
 		},
 		PlanetMercury: { 
 			Mesh: this.MercuryMesh,//scene.getObjectByName(CASE_MESHES_INDEXES.PLANET_MERCURY) 
 			TargetMesh: this.TargetMercuryMesh,
 			Description: "PLANET_MERCURY",
 			Index: CASE_MESHES_INDEXES.PLANET_MERCURY,
-			Price: 0
+			Price: 0,
+			Customizable: false
 
 		},
 		PlanetVenus: { 
@@ -119,7 +121,8 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 			TargetMesh: this.TargetVenusMesh,
 			Description: "PLANET_VENUS",
 			Index: CASE_MESHES_INDEXES.PLANET_VENUS,
-			Price: 0
+			Price: 0,
+			Customizable: false
 
 		},
 		PlanetEarth: { 
@@ -127,7 +130,8 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 			TargetMesh: this.TargetEarthMesh,
 			Description: "PLANET_EARTH",
 			Index: CASE_MESHES_INDEXES.PLANET_EARTH,
-			Price: 0
+			Price: 0,
+			Customizable: false
 
 		},
 		PlanetMars: { 
@@ -135,49 +139,56 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 			TargetMesh: this.TargetMarsMesh,
 			Description: "PLANET_MARS",
 			Index: CASE_MESHES_INDEXES.PLANET_MARS,
-			Price: 0
+			Price: 0,
+			Customizable: false
 		},
 		PlanetJupiter: { 
 			Mesh: this.JupiterMesh, //scene.getObjectByName(CASE_MESHES_INDEXES.CUBE)
 			TargetMesh: this.TargetJupiterMesh,
 			Description: "PLANET_JUPITER",
 			Index: CASE_MESHES_INDEXES.PLANET_JUPITER,
-			Price: 0
+			Price: 0,
+			Customizable: false
 		},
 		PlanetSaturn: { 
 			Mesh: this.SaturnMesh, //scene.getObjectByName(CASE_MESHES_INDEXES.CUBE)
 			TargetMesh: this.TargetSaturnMesh,
 			Description: "PLANET_SATURN",
 			Index: CASE_MESHES_INDEXES.PLANET_SATURN,
-			Price: 0
+			Price: 0,
+			Customizable: false
 		},
 		PlanetUranus: { 
 			Mesh: this.UranusMesh, 
 			TargetMesh: this.TargetUranusMesh,
 			Description: "PLANET_URANUS",
 			Index: CASE_MESHES_INDEXES.PLANET_URANUS,
-			Price: 0
+			Price: 0,
+			Customizable: false
 		},
 		PlanetNeptune: { 
 			Mesh: this.NeptuneMesh,
 			TargetMesh: this.TargetNeptuneMesh,
 			Description: "PLANET_NEPTUNE",
 			Index: CASE_MESHES_INDEXES.PLANET_NEPTUNE,
-			Price: 0
+			Price: 0,
+			Customizable: false
 		},
 		Sun: { 
 			Mesh: this.SunMesh, 
 			TargetMesh: this.TargetSunMesh,
 			Description: "SUN",
 			Index: CASE_MESHES_INDEXES.SUN,
-			Price: 0
+			Price: 0,
+			Customizable: false
 		},
 		Tardis: { 
 			Mesh: scene.getObjectByName(CASE_MESHES_INDEXES.TARDIS), 
 			TargetMesh: scene.getObjectByName(CASE_MESHES_INDEXES.TARDIS),
 			Description: "TARDIS",
 			Index: CASE_MESHES_INDEXES.TARDIS,
-			Price: 0
+			Price: 0,
+			Customizable: false
 		},
 	};
 	
@@ -187,6 +198,26 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 	*/
 	window.GLOBAL_OBJECTS.createPerson();
 	window.GLOBAL_OBJECTS.createMenu();
+};
+
+_MeshesBase.prototype.getMeshDataByMeshIndex = function (index)
+{
+	var keys = Object.keys(this.CaseMeshesWithDescriptions);
+	for(var i=0; i< keys.length; i++)
+	{
+		if(this.CaseMeshesWithDescriptions[keys[i]]["Index"] === index)
+		{
+			return {
+				price: this.CaseMeshesWithDescriptions[keys[i]]["Price"],
+				mesh: this.CaseMeshesWithDescriptions[keys[i]]["Mesh"].clone(),
+				description: this.CaseMeshesWithDescriptions[keys[i]]["Description"],
+				customizable: this.CaseMeshesWithDescriptions[keys[i]]["Customizable"]
+			};
+		}
+	}
+
+	throw new Error("Have no Mesh with this Index");	
+
 };
 
 _MeshesBase.prototype.loadMeshesPricesFromDB = function ()
