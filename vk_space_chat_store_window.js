@@ -350,7 +350,7 @@ _StoreWindow.prototype.onSave = function ()
 		face_color: this.CustomizeSection.SetFaceColorInput.value,
 		edge_color: this.CustomizeSection.SetEdgeColorInput.value,
 		date_time: new Date().toISOString().slice(0, 19).replace('T', ' '),
-		open_meshes: this.OpenMeshes,
+		open_meshes: this.Person.getOpenMeshesSaveString(),
 		case_mesh_index: this.ShowCaseMeshData.CaseMeshIndex,
 		operation: "save_custom_mesh_view_params"
 	});

@@ -343,6 +343,8 @@ _MeshesBase.prototype.getMeshCopyByIndex = function (index)
 	throw new Error("Have no Mesh with this Index");
 };
 
+/*Написать ФУКНЦИЮ ЗАГРУЗКИ КУБА ПОЛЬЗОВАТЕЛЯ!*/
+
 /*Returns copy of the Object by Object Index*/
 _MeshesBase.prototype.getTargetMeshCopyByIndex = function (index)
 {

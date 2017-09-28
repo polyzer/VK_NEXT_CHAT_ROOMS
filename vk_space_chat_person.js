@@ -34,15 +34,10 @@ var _Person = function (json_params)
 	его VisualKeeper.VideoMesh.Case
 	*/
 	this.VideoMesh = {};
-	this.VideoMesh.CaseMeshIndex = CASE_MESHES_INDEXES.CUBE;
-	if(!this.isMeshIndexInOpenMeshes())
-	{
-		this.addMeshIndexToOpenMeshesAndSaveToDB(CASE_MESHES_INDEXES.CUBE);
-	}
+	this.MeshesBase = GLOBAL_OBJECTS.getMeshesBase();
 	this.VideoMesh.Case = null; /*Любой Меш. Может быть равен this.VideoMesh.CubeMeshCase*/
-	this.VideoMesh.CubeMeshCase = null; /*Существует для каждого пользователя и загружается при заходе*/
-	this.setVideoMeshCaseByMeshIndex();
-
+	this.VideoMesh.CaseMeshIndex = CASE_MESHES_INDEXES.CUBE;
+	this.VideoMesh.CubeMeshCase = this.MeshesBase.getMeshCopyByIndex(CASE_MESHES_INDEXES.CUBE); /*Существует для каждого пользователя и загружается при заходе*/
 	/*Далее идут действия, которые выполняются только для локального пользователя*/
 	if(json_params instanceof Object)
 	{
@@ -59,10 +54,30 @@ var _Person = function (json_params)
 		{
 			this.parseVKVars();
 			this.checkPersonAtDB();
+			if(!this.isMeshIndexInOpenMeshes())
+			{
+				this.addMeshIndexToOpenMeshesAndSaveToDB(CASE_MESHES_INDEXES.CUBE);
+			}
+			this.loadSavedCustomViewParameters();
+			this.setVideoMeshCaseByMeshIndex();
 		}
 
 	}
 
+};
+
+_Person.prototype.getOpenMeshesSaveString = function ()
+{
+	var topen_meshes = "";
+	for(var i=0; i< this.OpenMeshes.length; i++)
+	{
+		topen_meshes += this.OpenMeshes[i];
+		if(i !== (this.OpenMeshes.length - 1))
+		{
+			topen_meshes += ",";
+		}
+	}
+	return topen_meshes;
 };
 
 /*
@@ -189,7 +204,7 @@ _Person.prototype.loadSavedCustomViewParameters = function ()
 {
 	var send_data = "datas=" + JSON.stringify({
 		operation: "get_custom_mesh_view_params",
-		user_id: this.Person.getUserVKID()
+		user_id: this.getUserVKID()
 	});
 	$.ajax({
 		type: "POST",
