@@ -52,6 +52,12 @@ var _StoreWindow = function ()
 	this.PriceLabel.setAttribute("id", "PriceLabel");
 	this.PriceLabel.appendChild(document.createTextNode("0"));
 
+	/*It contains BuyObjectButton and PriceLabel.*/
+	this.BuyContainer = document.createElement("div");
+	this.BuyContainer.setAttribute("id", "BuyContainer");
+	this.BuyContainer.appendChild(this.PriceLabel);
+	this.BuyContainer.appendChild(this.BuyObjectButton);
+
 	/*Окно предпросмотра вида пользовательского Объекта*/
 	this.UserObjectView = {};
 	this.UserObjectView.Scene = new THREE.Scene();
@@ -101,7 +107,6 @@ var _StoreWindow = function ()
 
 	/*Секция покупки возможности кастомизации*/
 	this.CustomizeSection = {};
-	this.CustomizeSection.BuyCustomButton = document.createElement("div");
 
 	this.CustomizeSection.CustomizeSectionDiv = document.createElement("div");
 	this.CustomizeSection.CustomizeSectionDiv.setAttribute("id", "CustomizeSectionDiv");
@@ -164,7 +169,6 @@ var _StoreWindow = function ()
 	this.StoreWindowDiv.appendChild(this.CustomizeSection.CustomizeSectionDiv);
 	/*добавили кнопку сохранения настроек*/
 	this.StoreWindowDiv.appendChild(this.SaveOptionsButton);
-	this.StoreWindowDiv.appendChild(this.PriceLabel);
 
 	document.body.appendChild(this.StoreWindowDiv);
 
@@ -215,12 +219,12 @@ _StoreWindow.prototype.toggleBuyButtonIfMeshWasBought = function (index)
 
 	if(!this.Person.isMeshIndexInOpenMeshes(index))
 	{
-		if(!this.StoreWindowDiv.contains(this.BuyObjectButton))
-			this.StoreWindowDiv.appendChild(this.BuyObjectButton, this.SaveOptionsButton);
+		if(!this.UserObjectView.ViewDescriptionDiv.contains(this.BuyContainer))
+			this.UserObjectView.ViewDescriptionDiv.insertBefore(this.BuyContainer, this.UserObjectView.Description);
 	} else
 	{
-		if(this.StoreWindowDiv.contains(this.BuyObjectButton))
-			this.StoreWindowDiv.removeChild(this.BuyObjectButton);		
+		if(this.UserObjectView.ViewDescriptionDiv.contains(this.BuyContainer))
+			this.UserObjectView.ViewDescriptionDiv.removeChild(this.BuyContainer);		
 	}
 
 }
@@ -299,7 +303,7 @@ _StoreWindow.prototype.onClose = function ()
 /**/
 _StoreWindow.prototype.update = function ()
 {
-	this.ShowCaseMeshData.CaseMesh.rotation.x += 0.02;
+	this.ShowCaseMeshData.CaseMesh.rotation.y += 0.02;
 	this.UserObjectView.Renderer.render(this.UserObjectView.Scene, this.UserObjectView.Camera);
 	if(this.updating === true)
 		requestAnimationFrame(this.updateBF);

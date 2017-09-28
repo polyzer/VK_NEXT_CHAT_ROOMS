@@ -5,6 +5,7 @@
 var _MeshesBase = function ()
 {
 	this.onSceneLoadedBF = this.onSceneLoaded.bind(this);
+	this.onLoadMeshesPricesFromDBBF = this.onLoadMeshesPricesFromDB.bind(this);
 	/*Загрузчик текстур*/
 	this.ColladaLoader = new THREE.ColladaLoader();
 
@@ -193,9 +194,11 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 	};
 	
 	this.CaseMeshesWithDescriptions.Tardis.Mesh.scale.set(30,30,30);
+	this.CaseMeshesWithDescriptions.Tardis.Mesh.rotation.z = 90;
 	/*
-	В конце, после загрузки всех текс мы создаем персону и Меню;
+		В конце, после загрузки всех текс мы создаем персону и Меню;
 	*/
+	this.loadMeshesPricesFromDB();
 	window.GLOBAL_OBJECTS.createPerson();
 	window.GLOBAL_OBJECTS.createMenu();
 };
@@ -222,14 +225,14 @@ _MeshesBase.prototype.getMeshDataByMeshIndex = function (index)
 
 _MeshesBase.prototype.loadMeshesPricesFromDB = function ()
 {
-	var send_data = "data="+JSON.stringify({
+	var send_data = "datas="+JSON.stringify({
 		operation: "get_meshes_prices"
 	});
 	$.ajax({
 		type: "POST",
 		url: "./mysql.php",
 		async: true,
-		success: this.onLoadMeshesPricesFromDB,
+		success: this.onLoadMeshesPricesFromDBBF,
 		data: send_data,
 		contentType: "application/x-www-form-urlencoded",
 		error: function (jqXHR, textStatus,errorThrown) { console.log(errorThrown + " " + textStatus);}
@@ -250,7 +253,7 @@ _MeshesBase.prototype.onLoadMeshesPricesFromDB = function (json_params)
 		{
 			if(this.CaseMeshesWithDescriptions[this.keys[i]]["Index"] === json_params["result_datas"][j]["game_case_mesh_index"])
 			{
-				this.CaseMeshesWidhDescriptions[this.keys[i]]["Price"] = parseInt(json_params["result_datas"][j]["price"]);
+				this.CaseMeshesWithDescriptions[this.keys[i]]["Price"] = parseInt(json_params["result_datas"][j]["price"]);
 			}
 		}
 	}

@@ -112,6 +112,7 @@ if ($_SESSION["vk_vis_a_vis_rooms"]["true_connection"] && $_POST["datas"])
 					$row = $res->fetch_assoc();					
 					$result_arr["result_datas"][$i] = $row;
 				}
+				$result_arr["server_answer"] = $YES_DATA;
 			}
 			echo json_encode($result_arr);
 		break;

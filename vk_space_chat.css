@@ -1,6 +1,5 @@
 body {
-	font-family: Verdana;
-
+	font-family: 'Open Sans', sans-serif;
 	user-select: none;
 	-ms-user-select: none;
 	-moz-user-select: none;
@@ -333,13 +332,14 @@ body {
 
 #UserObjectPreviewContainer{
 	width: 500px;
-	padding: 20px 20px 20px 20px;
+	padding: 10px 10px 10px 10px;
 }
 #UserObjectDescription{
 	width: 500px;
 	height: auto;
 	text-align: center;
-	padding: 20px 20px 20px 20px;
+	padding: 10px 10px 10px 10px;
+	font-size: 20px;
 }
 #ViewDescriptionDiv{
 	display: flex;
@@ -396,14 +396,19 @@ body {
 	top: 150px;
 }
 
+#BuyContainer{
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: space-around;
+	height: 100px;
+}
+
 #BuyObjectButton{
-	position: absolute;
-	left: 200px;
-	top: 400px;
 	background-color: #0081d1;
 	cursor: pointer;
 	padding: 10px 5px 10px 5px;
-	font-size: 40px;
+	font-size: 30px;
 	color: white;
 	font-family: 'Open Sans', sans-serif;
 	border: 2px solid #0081d1;
@@ -414,4 +419,12 @@ body {
 	transition-duration: 1s;
 	color: black;
 	background-color: white;
+}
+#PriceLabel {
+	background-color: yellow;
+	width: 50%;
+	text-align: center;
+	margin: auto;
+	font-size: 20px;
+	font-weight: bold;
 }

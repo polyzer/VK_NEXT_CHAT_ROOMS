@@ -35,6 +35,10 @@ var _Person = function (json_params)
 	*/
 	this.VideoMesh = {};
 	this.VideoMesh.CaseMeshIndex = CASE_MESHES_INDEXES.CUBE;
+	if(!this.isMeshIndexInOpenMeshes())
+	{
+		this.addMeshIndexToOpenMeshesAndSaveToDB(CASE_MESHES_INDEXES.CUBE);
+	}
 	this.VideoMesh.Case = null; /*Любой Меш. Может быть равен this.VideoMesh.CubeMeshCase*/
 	this.VideoMesh.CubeMeshCase = null; /*Существует для каждого пользователя и загружается при заходе*/
 	this.setVideoMeshCaseByMeshIndex();
@@ -68,7 +72,7 @@ _Person.prototype.isMeshIndexInOpenMeshes = function (index)
 {
 	for(var i=0; i< this.OpenMeshes.length; i++)
 	{
-		if(this.OpenMeshes[i] === mesh_index)
+		if(this.OpenMeshes[i] === index)
 		{
 			return true;
 		}
@@ -85,7 +89,7 @@ _Person.prototype.addMeshIndexToOpenMeshesAndSaveToDB = function (mesh_index)
 	{
 		if(this.OpenMeshes[i] === mesh_index)
 		{
-			throw new Error("That Mesh was buying!");
+			console.log("That Mesh was buying!");
 			return;
 		}
 	}
@@ -149,7 +153,7 @@ _Person.prototype.saveOpenMeshesToDB = function ()
 	}
 	var send_data = "datas=" + JSON.stringify({
 		operation: "save_open_meshes",
-		vk_id: this.Person.getUserVKID(),
+		vk_id: this.getUserVKID(),
 		open_meshes: topen_meshes
 	});
 
@@ -172,7 +176,7 @@ _Person.prototype.setCaseMeshIndex = function (index)
 /*Ёбаный обработчик успешного сохранения*/
 _Person.prototype.onSaveOpenMeshesToDBSuccess = function (json_params)
 {
-	alert(json_params);
+	console.log(json_params);
 };
 
 _Person.prototype.saveCustomMeshViewParameters = function (json_params)
