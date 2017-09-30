@@ -11,13 +11,6 @@ var _MeshesBase = function ()
 
 	this.radius = 180;
 	this.PlanetsTargetMeshRadius = 40;
-	/*Индексы, ныжные для того, чтобы доставать Индексы Мешей по запросу*/
-	this.Indexes = {
-		First: null,
-		Last: null,
-		Prev: null,
-		Next: null
-	}
 
 	this.CubeMesh = new THREE.Mesh(
 		new THREE.BoxGeometry(180, 180, 180), 
@@ -27,6 +20,10 @@ var _MeshesBase = function ()
 		new THREE.EdgesGeometry( this.CubeMesh.geometry ), 
 		new THREE.LineBasicMaterial( { color: 0xffffff*Math.random(), linewidth: 2 } )
 	));
+
+	this.TargetCubeMesh = this.CubeMesh.clone();
+	this.TargetCubeMesh.scale.set(0.2, 0.2, 0.2);
+
 	this.MercuryMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
 		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_mercury.png")})
@@ -201,6 +198,24 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 	this.loadMeshesPricesFromDB();
 	window.GLOBAL_OBJECTS.createPerson();
 	window.GLOBAL_OBJECTS.createMenu();
+};
+/*Устанавливает внешний виду Куба.*/
+_MeshesBase.prototype.setCubeMeshParametersJSON = function (json_params)
+{
+	this.CaseMeshesWithDescriptions[CASE_MESHES_INDEXES.CUBE].Mesh.material.color.setStyle(json_params["result_datas"]["face_color"]);
+	this.CaseMeshesWithDescriptions[CASE_MESHES_INDEXES.CUBE].Mesh.material.opacity = parseFloat(json_params["result_datas"]["opacity"]);
+	this.CaseMeshesWithDescriptions[CASE_MESHES_INDEXES.CUBE].Mesh.children[0].material.color.setStyle(json_params["result_datas"]["edge_color"]);
+
+	this.CaseMeshesWithDescriptions[CASE_MESHES_INDEXES.CUBE].TargetMesh.material.color.setStyle(json_params["result_datas"]["face_color"]);
+	this.CaseMeshesWithDescriptions[CASE_MESHES_INDEXES.CUBE].TargetMesh.material.opacity = parseFloat(json_params["result_datas"]["opacity"]);
+	this.CaseMeshesWithDescriptions[CASE_MESHES_INDEXES.CUBE].TargetMesh.children[0].material.color.setStyle(json_params["result_datas"]["edge_color"]);
+};
+
+
+_MeshesBase.prototype.setCubeMeshCase = function (cubeMeshCase)
+{
+	this.CubeMesh = cubeMeshCase;
+	this.CaseMeshesWithDescriptions.Cube.Mesh = cubeMeshCase;
 };
 
 _MeshesBase.prototype.getMeshDataByMeshIndex = function (index)

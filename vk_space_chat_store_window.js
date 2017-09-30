@@ -10,6 +10,7 @@ var _StoreWindow = function ()
 	this.onShowNextObjectButtonClickBF = this.onShowNextObjectButtonClick.bind(this);
 	this.onShowPrevObjectButtonClickBF = this.onShowPrevObjectButtonClick.bind(this);
 	this.onBuyObjectButtonClickBF = this.onBuyObjectButtonClick.bind(this);
+	this.setLoadedCustomViewParametersBF = this.setLoadedCustomViewParameters.bind(this);
 
 	this.onSaveSuccessBF = this.onSaveSuccess.bind(this);
 	this.onSaveErrorBF = this.onSaveError.bind(this);
@@ -170,8 +171,24 @@ var _StoreWindow = function ()
 	/*добавили кнопку сохранения настроек*/
 	this.StoreWindowDiv.appendChild(this.SaveOptionsButton);
 
+	this.loadSavedCustomViewParameters();
+
 	document.body.appendChild(this.StoreWindowDiv);
 
+};
+/*Устанавливает инпуты в зависимости от переданного элемента*/
+_StoreWindow.prototype.setCustomizeUIElementsByCubeCaseMesh = function (mesh)
+{
+	this.CustomizeSection.SetOpacityRangeInput.value = mesh.material.opacity;
+	this.CustomizeSection.SetEdgeColorInput.value = mesh.children[0].material.color;
+	this.CustomizeSection.SetFaceColorInput.value = mesh.material.color;
+};
+/*Устанавливает инпуты в зависимости от переданного элемента*/
+_StoreWindow.prototype.setCustomizeUIElementsByJSON = function (json_params)
+{
+	this.CustomizeSection.SetOpacityRangeInput.value = json_params["result_datas"]["opacity"];
+	this.CustomizeSection.SetEdgeColorInput.value = json_params["result_datas"]["edge_color"];
+	this.CustomizeSection.SetFaceColorInput.value = json_params["result_datas"]["face_color"];
 };
 
 /*Обработчик нажатия на кнопку покупки*/
@@ -289,6 +306,7 @@ _StoreWindow.prototype.getOpenStoreWindowListener = function ()
 
 _StoreWindow.prototype.onOpen = function ()
 {
+	this.getCaseMeshFromPersonAndLoadMesh();
 	this.updating = true;
 	requestAnimationFrame(this.updateBF);
 	$("#StoreWindowDiv").show();
@@ -309,12 +327,13 @@ _StoreWindow.prototype.update = function ()
 		requestAnimationFrame(this.updateBF);
 };
 
+
 /*Загружает сохраненные настройки вида с сервера*/ 
 _StoreWindow.prototype.loadSavedCustomViewParameters = function ()
 {
 	var send_data = "datas=" + JSON.stringify({
-		operation: "get_custom_view_params",
-		user_id: this.Person.getUserID()
+		operation: "get_custom_mesh_view_params",
+		vk_id: this.Person.getUserVKID()
 	});
 	$.ajax({
 		type: "POST",
@@ -328,7 +347,9 @@ _StoreWindow.prototype.loadSavedCustomViewParameters = function ()
 	});	
 };
 
-/*Принимает и устанавливает полученные с сервера параметры к пользовательскому Mesh'у*/
+
+
+/*Принимает и устанавливает полученные с сервера параметры к пользовательскому Мешу*/
 _StoreWindow.prototype.setLoadedCustomViewParameters = function (json_params)
 {
 	if(typeof(json_params) === "string")
@@ -336,8 +357,22 @@ _StoreWindow.prototype.setLoadedCustomViewParameters = function (json_params)
 		json_params = JSON.parse(json_params);
 	}
 
-	
+	alert(json_params);
+	/*Если сервер сказал, что данные доступны!*/
+	if(json_params["server_answer"] === "YES_DATA")
+	{
+		this.MeshesBase.setCubeMeshParametersJSON(json_params);
+		this.setCustomizeUIElementsByJSON(json_params);
+
+	} else if(json_params["server_answer"] === "NO_DATA")
+	{
+		console.log("User hasn't custom view VisualKeeper parameters");
+	} else
+	{
+		console.log("something is wrong :(");
+	}
 };
+
 
 /*Обработчик нажатия на кнопку сохранить*/
 _StoreWindow.prototype.onSave = function ()

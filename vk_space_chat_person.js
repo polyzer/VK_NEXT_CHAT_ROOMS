@@ -37,7 +37,6 @@ var _Person = function (json_params)
 	this.MeshesBase = GLOBAL_OBJECTS.getMeshesBase();
 	this.VideoMesh.Case = null; /*Любой Меш. Может быть равен this.VideoMesh.CubeMeshCase*/
 	this.VideoMesh.CaseMeshIndex = CASE_MESHES_INDEXES.CUBE;
-	this.VideoMesh.CubeMeshCase = this.MeshesBase.getMeshCopyByIndex(CASE_MESHES_INDEXES.CUBE); /*Существует для каждого пользователя и загружается при заходе*/
 	/*Далее идут действия, которые выполняются только для локального пользователя*/
 	if(json_params instanceof Object)
 	{
@@ -58,7 +57,9 @@ var _Person = function (json_params)
 			{
 				this.addMeshIndexToOpenMeshesAndSaveToDB(CASE_MESHES_INDEXES.CUBE);
 			}
-			this.loadSavedCustomViewParameters();
+			// this.loadSavedCustomViewParameters();
+			// this.MeshesBase.setCubeMeshCase(this.VideoMesh.CubeMeshCase);
+			// this.setCustomizeUIElementsByCubeCaseMesh(this.CubeMeshCase);
 			this.setVideoMeshCaseByMeshIndex();
 		}
 
@@ -137,17 +138,17 @@ _Person.prototype.setVideoMeshCaseByMeshIndex = function (index)
 _Person.prototype.getCubeVideoMeshCaseParametersJSON = function ()
 {
 	return {
-		opacity: this.VideoMesh.Case.material.opacity, 
-		face_color: this.VideoMesh.Case.material.color.getHex(), 
-		edge_color: this.VideoMesh.Case.children[0].material.color.getHex()
+		opacity: this.VideoMesh.CubeMeshCase.material.opacity, 
+		face_color: this.VideoMesh.CubeMeshCase.material.color.getHex(), 
+		edge_color: this.VideoMesh.CubeMeshCase.children[0].material.color.getHex()
 	};
 };
 /*Функция вроде как устанавливает необходимые параметры и материалы структуры КУБА*/
-_Person.prototype.setCubeVideoMeshCaseParametersJSON = function (json_params)
+_Person.prototype.setCubeVideoMeshCaseParametersByJSON = function (json_params)
 {
-		this.VideoMesh.CubeCaseMesh.material.opacity = json_params.opacity;
-		this.VideoMesh.CubeCaseMesh.material.color.setHex(json_params.face_color);
-		this.VideoMesh.CubeCaseMesh.children[0].material.color.setHex(json_params.edge_color);
+		this.VideoMesh.CubeMeshCase.material.opacity = json_params.opacity;
+		this.VideoMesh.CubeMeshCase.material.color.setHex(json_params.face_color);
+		this.VideoMesh.CubeMeshCase.children[0].material.color.setHex(json_params.edge_color);
 };
 /*
 IN: 
@@ -204,7 +205,7 @@ _Person.prototype.loadSavedCustomViewParameters = function ()
 {
 	var send_data = "datas=" + JSON.stringify({
 		operation: "get_custom_mesh_view_params",
-		user_id: this.getUserVKID()
+		vk_id: this.getUserVKID()
 	});
 	$.ajax({
 		type: "POST",
@@ -227,13 +228,12 @@ _Person.prototype.setLoadedCustomViewParameters = function (json_params)
 	{
 		json_params = JSON.parse(json_params);
 	}
-
-	alert(json_params);
 	/*Если сервер сказал, что данные доступны!*/
 	if(json_params["server_answer"] === "YES_DATA")
 	{
-		this.VideoMesh.Case.material.color.setHex(json_params["result_datas"]["color"]);
-		this.VideoMesh.Case.material.opacity = parseFloat(json_params["result_datas"]["opacity"]);
+		// this.VideoMesh.CubeMeshCase.material.color.setHex(json_params["result_datas"]["face_color"]);
+		// this.VideoMesh.CubeMeshCase.material.opacity = parseFloat(json_params["result_datas"]["opacity"]);
+		// this.VideoMesh.CubeMeshCase.children[0].material.color.setHex(json_params["result_datas"]["edge_color"]);
 		this.VideoMesh.CaseMeshIndex = json_params["result_datas"]["case_mesh_index"];
 		this.OpenMeshes = json_params["result_datas"]["open_meshes"].split(",");
 
