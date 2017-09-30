@@ -357,7 +357,6 @@ _StoreWindow.prototype.setLoadedCustomViewParameters = function (json_params)
 		json_params = JSON.parse(json_params);
 	}
 
-	alert(json_params);
 	/*Если сервер сказал, что данные доступны!*/
 	if(json_params["server_answer"] === "YES_DATA")
 	{
@@ -400,6 +399,8 @@ _StoreWindow.prototype.onSave = function ()
 		error: function (jqXHR, textStatus,errorThrown) { console.log(errorThrown + " " + textStatus);}
 
 	});
+
+	alert(this.Person.getCaseMeshIndex());
 };
 
 _StoreWindow.prototype.onSaveSuccess = function (json_params)
