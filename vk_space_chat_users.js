@@ -23,7 +23,6 @@ var _LocalUser = function (json_params)
 		this.AllUsers = json_params.all_users;
 		this.NetMessagesObject = json_params.net_messages_object;
 		this.Camera = json_params.camera;
-		this.Person = json_params.person;
 		this.Peer = json_params.peer;
 
 		this.VisualKeeper = new _VisualKeeper({scene: this.Scene, camera: this.Camera, user_type: this.UserType});
@@ -42,6 +41,7 @@ var _LocalUser = function (json_params)
 	}else
 		console.log(this.constructor.name + " have no json_params!");
 
+	this.Person = GLOBAL_OBJECTS.getPerson();
 	this.ChatControls = new _ChatControls({
 		on_find_next_button_click: json_params.chat_controls_callback_bf,
 		scene: this.Scene,
@@ -369,7 +369,7 @@ var _RemoteUser = function (json_params)
 	this.MediaConnection = null; /*Хранит медасоединение, по которому приходят видеоряд и звук*/
 	this.UserType = USER_TYPES.REMOTE; /*Удалённый пользователь*/
 	this.BoundedStatus = false;
-	this.Person = new _Person({UserType: this.UserType}); /*Персона, которая хранит внутренние данные*/
+	this.Person = new _RemotePerson(); /*Персона, которая хранит внутренние данные*/
 
 	if(json_params instanceof Object)
 	{
@@ -457,6 +457,8 @@ _RemoteUser.prototype.onMediaConnectionError = function ()
 _RemoteUser.prototype.onOpenConnection = function()
 {
 	this.Connection.send(JSON.stringify(this.NetMessagesObject.GetNickNameMessage));
+	this.NetMessagesObject.setGetYourVisualKeeperCaseMeshParametersDataMessage(this.AllUsers[0].getPerson().getAllVideoMeshCaseParametersForNetMessageJSON());
+	this.Connection.send(JSON.stringify(this.NetMessagesObject.GetYourVisualKeeperCaseMeshParametersDataMessage));
 	this.ConnectionStatus = "open";
 };
 
@@ -511,15 +513,19 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 	break;		
 
 	case REQUESTS.UTOU.GET_YOUR_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
-		this.Person.setVisualKeeperCaseMeshParameters(json_params);
-		this.VisualKeeper.setSendedCaseViewParameters(json_params);
-		this.NetMessagesObject.setSendMyVisualKeeperCaseMeshParametersDataMessage(this.AllUsers[0].getPerson().getVideoMeshCaseParametersJSON());
+		this.Person.setVideoMeshCaseParametersByJSON(json_params);
+		this.Person.setVideoMeshCaseByMeshIndex();
+		this.setVisualKeeperByPerson();
+		alert(json_params);
+		this.NetMessagesObject.setSendMyVisualKeeperCaseMeshParametersDataMessage(this.AllUsers[0].getPerson().getAllVideoMeshCaseParametersForNetMessageJSON());
 		this.Connection.send(JSON.stringify(this.NetMessagesObject.SendMyVisualKeeperCaseMeshParametersDataMessage));
 	break;
 
 	case REQUESTS.UTOU.SEND_MY_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
-		this.VisualKeeper.setSendedCaseMeshParameters(json_params);
-		this.AllUsers[0].getUserVKID();
+		this.Person.setVideoMeshCaseParametersByJSON(json_params);
+		this.Person.setVideoMeshCaseByMeshIndex();
+		this.setVisualKeeperByPerson();
+		alert(json_params);
 	break;
 
 	case REQUESTS.UTOU.SHOOT:
@@ -548,7 +554,10 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 
 };
 
-
+_RemoteUser.prototype.setVisualKeeperByPerson = function ()
+{
+	this.VisualKeeper.setVisualMeshCase(this.Person.getVideoMeshCase());
+};
 
 _RemoteUser.prototype.update = function ()
 {

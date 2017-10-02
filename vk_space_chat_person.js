@@ -33,8 +33,8 @@ var _Person = function (json_params)
 	Объект для Кейса локального пользователя, на который ДОЛЖЕН ссылаться
 	его VisualKeeper.VideoMesh.Case
 	*/
-	this.VideoMesh = {};
 	this.MeshesBase = GLOBAL_OBJECTS.getMeshesBase();
+	this.VideoMesh = {};
 	this.VideoMesh.Case = null; /*Любой Меш. Может быть равен this.VideoMesh.CubeMeshCase*/
 	this.VideoMesh.CaseMeshIndex = CASE_MESHES_INDEXES.CUBE;
 	/*Далее идут действия, которые выполняются только для локального пользователя*/
@@ -137,18 +137,32 @@ _Person.prototype.setVideoMeshCaseByMeshIndex = function (index)
 /*Структура возвращает данные от структуры КУБА.*/
 _Person.prototype.getCubeVideoMeshCaseParametersJSON = function ()
 {
-	return {
-		opacity: this.VideoMesh.CubeMeshCase.material.opacity, 
-		face_color: this.VideoMesh.CubeMeshCase.material.color.getHex(), 
-		edge_color: this.VideoMesh.CubeMeshCase.children[0].material.color.getHex()
-	};
+	if(this.VideoMesh.CaseMeshIndex === CASE_MESHES_INDEXES.CUBE){
+		return {
+			opacity: this.VideoMesh.Case.material.opacity, 
+			face_color: this.VideoMesh.Case.material.color.getStyle(), 
+			edge_color: this.VideoMesh.Case.children[0].material.color.getStyle()
+		};
+	}
+	else{
+		return {
+			opacity: this.VideoMesh.Case.material.opacity, 
+			face_color: "#000000", 
+			edge_color: "#000000"			
+		};
+	}
 };
 /*Функция вроде как устанавливает необходимые параметры и материалы структуры КУБА*/
 _Person.prototype.setCubeVideoMeshCaseParametersByJSON = function (json_params)
 {
-		this.VideoMesh.CubeMeshCase.material.opacity = json_params.opacity;
-		this.VideoMesh.CubeMeshCase.material.color.setHex(json_params.face_color);
-		this.VideoMesh.CubeMeshCase.children[0].material.color.setHex(json_params.edge_color);
+	if(this.VideoMesh.CaseMeshIndex === CASE_MESHES_INDEXES.CUBE)
+	{
+		this.VideoMesh.Case.material.opacity = json_params.opacity;
+		this.VideoMesh.Case.material.color.setStyle(json_params.face_color);
+		this.VideoMesh.Case.children[0].material.color.setStyle(json_params.edge_color);
+	} else {
+		this.VideoMesh.Case.material.opacity = json_params.opacity;		
+	}
 };
 /*
 IN: 
@@ -341,4 +355,53 @@ _Person.prototype.onCheckSuccess = function (json_params)
 	{
 		json_params = JSON.parse(json_params);
 	}
+};
+/*Формирует необходимый объект для */
+_Person.prototype.getAllVideoMeshCaseParametersForNetMessageJSON = function ()
+{
+	var params = this.getCubeVideoMeshCaseParametersJSON();
+	params.case_mesh_index = this.getCaseMeshIndex();
+	return params;
+};
+
+/*
+	Структура удалённой персоны.
+	Используется удалённым пользователем для хранения определённых данных.
+*/
+var _RemotePerson = function (json_params)
+{
+	this.MeshesBase = GLOBAL_OBJECTS.getMeshesBase();
+	this.VideoMesh = {
+		Case: null,
+		CaseMeshIndex: CASE_MESHES_INDEXES.CUBE
+	};
+}
+/*Функция вроде как устанавливает необходимые параметры и материалы структуры КУБА*/
+_RemotePerson.prototype.setVideoMeshCaseParametersByJSON = function (json_params)
+{
+	this.VideoMesh.CaseMeshIndex = json_params.case_mesh_index;
+	
+	if(this.VideoMesh.CaseMeshIndex === CASE_MESHES_INDEXES.CUBE)
+	{
+		this.VideoMesh.Case.material.opacity = json_params.opacity;
+		this.VideoMesh.Case.material.color.setStyle(json_params.face_color);
+		this.VideoMesh.Case.children[0].material.color.setStyle(json_params.edge_color);
+	}
+};
+
+/*Устанавливает текущий Mesh по индексу.*/
+_RemotePerson.prototype.setVideoMeshCaseByMeshIndex = function (index)
+{
+	if(index)
+	{
+		this.VideoMesh.Case = this.MeshesBase.getMeshCopyByIndex(index);
+	}else
+	{
+		this.VideoMesh.Case = this.MeshesBase.getMeshCopyByIndex(this.VideoMesh.CaseMeshIndex);
+	}
+};
+
+_RemotePerson.prototype.getVideoMeshCase = function ()
+{
+	return this.VideoMesh.Case;
 };

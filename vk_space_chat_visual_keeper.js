@@ -123,14 +123,20 @@ var _VisualKeeper = function (json_params)
 	}
 
 };
+
+_VisualKeeper.prototype.setVisualMeshCase = function (mesh)
+{
+	this.VideoMesh.Case = mesh;
+};
+
 /*Настройка внешнего вида Кейса*/
 _VisualKeeper.prototype.setVideoMeshCaseByParameters = function (json_params)
 {
 	if(json_params instanceof Object)
 	{
-		if(json_params.case_mesh_index !== undefined)
+		if(json_params.case_mesh_index)
 		{
-			this.VideoMesh.Case = window.MeshesBase.getMeshCopyByIndex(json_params.case_mesh_index);
+			this.VideoMesh.Case = GLOBAL_OBJECTS.getMeshesBase().getMeshCopyByIndex(json_params.case_mesh_index);
 			/*Если нам прислали куб, то нужно установить его визуальные параметры*/
 			this.setTargetMeshByCaseMeshIndex(json_params);
 		}
@@ -172,19 +178,6 @@ _VisualKeeper.prototype.setRandomPosition = function ()
 _VisualKeeper.prototype.update = function ()
 {
 	this.TargetMesh.rotation.y += 0.002;
-};
-/*Устанавливает внешний вид оболочки изображения пользователя*/
-_VisualKeeper.prototype.setSendedCaseViewParameters = function (json_params)
-{
-	if(json_params.case_mesh_index === CASE_MESHES_INDEXES.CUBE){
-		this.VideoMesh.Case.material.color.setHex(json_params["face_color"]);
-		this.VideoMesh.Case.children[0].material.color.setHex(json_params["edge_color"]);
-		this.VideoMesh.material.opacity = json_params["opacity"];
-
-		this.TargetMesh.Case.material.color.setHex(json_params["face_color"]);
-		this.TargetMesh.Case.children[0].material.color.setHex(json_params["edge_color"]);
-		this.TargetMesh.material.opacity = json_params["opacity"];	
-	}
 };
 
 /* Устанавливает позицию корабля
