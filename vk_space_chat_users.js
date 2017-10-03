@@ -458,7 +458,7 @@ _RemoteUser.prototype.onOpenConnection = function()
 {
 	this.Connection.send(JSON.stringify(this.NetMessagesObject.GetNickNameMessage));
 	this.NetMessagesObject.setGetYourVisualKeeperCaseMeshParametersDataMessage(this.AllUsers[0].getPerson().getAllVideoMeshCaseParametersForNetMessageJSON());
-	this.Connection.send(JSON.stringify(this.NetMessagesObject.GetYourVisualKeeperCaseMeshParametersDataMessage));
+	this.Connection.send(JSON.stringify(this.NetMessagesObject.GetYourVisualKeeperCaseMeshParametersMessage));
 	this.ConnectionStatus = "open";
 };
 
@@ -514,18 +514,16 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 
 	case REQUESTS.UTOU.GET_YOUR_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
 		this.Person.setVideoMeshCaseParametersByJSON(json_params);
-		this.Person.setVideoMeshCaseByMeshIndex();
-		this.setVisualKeeperByPerson();
-		alert(json_params);
+		this.Person.setVideoMeshCaseByMeshIndex();		
+		this.setVisualKeeperByPersonAndAddToScene();
 		this.NetMessagesObject.setSendMyVisualKeeperCaseMeshParametersDataMessage(this.AllUsers[0].getPerson().getAllVideoMeshCaseParametersForNetMessageJSON());
-		this.Connection.send(JSON.stringify(this.NetMessagesObject.SendMyVisualKeeperCaseMeshParametersDataMessage));
+		this.Connection.send(JSON.stringify(this.NetMessagesObject.SendMyVisualKeeperCaseMeshParametersMessage));
 	break;
 
 	case REQUESTS.UTOU.SEND_MY_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
 		this.Person.setVideoMeshCaseParametersByJSON(json_params);
 		this.Person.setVideoMeshCaseByMeshIndex();
-		this.setVisualKeeperByPerson();
-		alert(json_params);
+		this.setVisualKeeperByPersonAndAddToScene();
 	break;
 
 	case REQUESTS.UTOU.SHOOT:
@@ -554,9 +552,11 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 
 };
 
-_RemoteUser.prototype.setVisualKeeperByPerson = function ()
+_RemoteUser.prototype.setVisualKeeperByPersonAndAddToScene = function ()
 {
+	this.VisualKeeper.removeCaseMeshFromScene();
 	this.VisualKeeper.setVisualMeshCase(this.Person.getVideoMeshCase());
+	this.VisualKeeper.addCaseMeshToScene();
 };
 
 _RemoteUser.prototype.update = function ()

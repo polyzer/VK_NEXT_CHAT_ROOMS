@@ -230,6 +230,22 @@ _VisualKeeper.prototype.removeFromScene = function ()
 	this.Scene.remove(this.VideoMesh.Case);
 };
 
+_VisualKeeper.prototype.removeCaseMeshFromScene = function (mesh)
+{
+	if(mesh)
+		this.Scene.remove(mesh);		
+	else
+		this.Scene.remove(this.VideoMesh.Case);
+};
+_VisualKeeper.prototype.addCaseMeshToScene = function (mesh)
+{
+	if(mesh)
+		this.Scene.add(mesh);		
+	else
+		this.Scene.add(this.VideoMesh.Case);
+};
+
+
 _VisualKeeper.prototype.setVideoTextureByStream = function (stream)
 {
 	if(window.isUsingPlugin === true)

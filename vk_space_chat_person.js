@@ -57,9 +57,7 @@ var _Person = function (json_params)
 			{
 				this.addMeshIndexToOpenMeshesAndSaveToDB(CASE_MESHES_INDEXES.CUBE);
 			}
-			// this.loadSavedCustomViewParameters();
-			// this.MeshesBase.setCubeMeshCase(this.VideoMesh.CubeMeshCase);
-			// this.setCustomizeUIElementsByCubeCaseMesh(this.CubeMeshCase);
+			this.loadSavedCustomViewParameters();
 			this.setVideoMeshCaseByMeshIndex();
 		}
 
@@ -245,9 +243,6 @@ _Person.prototype.setLoadedCustomViewParameters = function (json_params)
 	/*Если сервер сказал, что данные доступны!*/
 	if(json_params["server_answer"] === "YES_DATA")
 	{
-		// this.VideoMesh.CubeMeshCase.material.color.setHex(json_params["result_datas"]["face_color"]);
-		// this.VideoMesh.CubeMeshCase.material.opacity = parseFloat(json_params["result_datas"]["opacity"]);
-		// this.VideoMesh.CubeMeshCase.children[0].material.color.setHex(json_params["result_datas"]["edge_color"]);
 		this.VideoMesh.CaseMeshIndex = json_params["result_datas"]["case_mesh_index"];
 		this.OpenMeshes = json_params["result_datas"]["open_meshes"].split(",");
 
@@ -379,13 +374,13 @@ var _RemotePerson = function (json_params)
 /*Функция вроде как устанавливает необходимые параметры и материалы структуры КУБА*/
 _RemotePerson.prototype.setVideoMeshCaseParametersByJSON = function (json_params)
 {
-	this.VideoMesh.CaseMeshIndex = json_params.case_mesh_index;
+	this.VideoMesh.CaseMeshIndex = json_params.data.case_mesh_index;
 	
 	if(this.VideoMesh.CaseMeshIndex === CASE_MESHES_INDEXES.CUBE)
 	{
-		this.VideoMesh.Case.material.opacity = json_params.opacity;
-		this.VideoMesh.Case.material.color.setStyle(json_params.face_color);
-		this.VideoMesh.Case.children[0].material.color.setStyle(json_params.edge_color);
+		this.VideoMesh.Case.material.opacity = json_params.data.opacity;
+		this.VideoMesh.Case.material.color.setStyle(json_params.data.face_color);
+		this.VideoMesh.Case.children[0].material.color.setStyle(json_params.data.edge_color);
 	}
 };
 

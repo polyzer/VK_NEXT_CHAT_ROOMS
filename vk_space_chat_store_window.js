@@ -399,8 +399,6 @@ _StoreWindow.prototype.onSave = function ()
 		error: function (jqXHR, textStatus,errorThrown) { console.log(errorThrown + " " + textStatus);}
 
 	});
-
-	alert(this.Person.getCaseMeshIndex());
 };
 
 _StoreWindow.prototype.onSaveSuccess = function (json_params)

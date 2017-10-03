@@ -134,28 +134,32 @@ var _NetMessages = function (json_params)
 
 _NetMessages.prototype.setGetYourFullDataMessage = function (json_params)
 {
-	for(param in Object.getOwnPropertyNames(this.GetYourFullData.data))
+	var keys = Object.keys(this.GetYourFullData.data);
+	for(var i=0; i< keys.length; i++)
 	{
-		if(json_params.hasOwnProperty(param))
+		if(json_params[keys[i]])
 		{
-			this.GetYourFullData.data[param] = json_params[param];
+			this.GetYourFullData.data[keys[i]] = json_params[keys[i]];		
 		} else
 		{
-			console.log("WE HAD UNDEFINED DATA PARAMETER: " + json_params[param]);
+			throw new Error("We have no parameter in json_params!");
 		}
 	}
+
+
 };
 
 _NetMessages.prototype.setSendMyFullDataMessage = function (json_params)
 {
-	for(param in Object.getOwnPropertyNames(this.SendMyFullData.data))
+	var keys = Object.keys(this.SendMyFullData.data);
+	for(var i=0; i< keys.length; i++)
 	{
-		if(json_params.hasOwnProperty(param))
+		if(json_params[keys[i]])
 		{
-			this.SendMyFullData.data[param] = json_params[param];
+			this.SendMyFullData.data[keys[i]] = json_params[keys[i]];		
 		} else
 		{
-			console.log("WE HAD UNDEFINED DATA PARAMETER: " + json_params[param]);
+			throw new Error("We have no parameter in json_params!");
 		}
 	}
 };
@@ -165,14 +169,15 @@ _NetMessages.prototype.setSendMyFullDataMessage = function (json_params)
 */
 _NetMessages.prototype.setGetYourVisualKeeperCaseMeshParametersDataMessage = function (json_params)
 {
-	for(param in Object.getOwnPropertyNames(this.GetYourVisualKeeperCaseMeshParametersMessage.data))
+	var keys = Object.keys(this.GetYourVisualKeeperCaseMeshParametersMessage.data);
+	for(var i=0; i< keys.length; i++)
 	{
-		if(json_params.hasOwnProperty(param))
+		if(json_params[keys[i]])
 		{
-			this.SendMyVisualKeeperCaseMeshParametersMessage.data[param] = json_params[param];
+			this.GetYourVisualKeeperCaseMeshParametersMessage.data[keys[i]] = json_params[keys[i]];		
 		} else
 		{
-			console.log("WE HAD UNDEFINED DATA PARAMETER: " + json_params[param]);
+			throw new Error("We have no parameter in json_params!");
 		}
 	}
 };
@@ -183,14 +188,15 @@ _NetMessages.prototype.setGetYourVisualKeeperCaseMeshParametersDataMessage = fun
 */
 _NetMessages.prototype.setSendMyVisualKeeperCaseMeshParametersDataMessage = function (json_params)
 {
-	for(param in Object.getOwnPropertyNames(this.SendMyVisualKeeperCaseMeshParametersMessage.data))
+	var keys = Object.keys(this.SendMyVisualKeeperCaseMeshParametersMessage.data);
+	for(var i=0; i< keys.length; i++)
 	{
-		if(json_params.hasOwnProperty(param))
+		if(json_params[keys[i]])
 		{
-			this.SendMyVisualKeeperCaseMeshParametersMessage.data[param] = json_params[param];
+			this.SendMyVisualKeeperCaseMeshParametersMessage.data[keys[i]] = json_params[keys[i]];		
 		} else
 		{
-			console.log("WE HAD UNDEFINED DATA PARAMETER: " + json_params[param]);
+			throw new Error("We have no parameter in json_params!");
 		}
 	}
 };
