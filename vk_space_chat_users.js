@@ -24,8 +24,9 @@ var _LocalUser = function (json_params)
 		this.NetMessagesObject = json_params.net_messages_object;
 		this.Camera = json_params.camera;
 		this.Peer = json_params.peer;
+		this.VisavisCounter = json_params.visavis_counter;
 
-		this.VisualKeeper = new _VisualKeeper({scene: this.Scene, camera: this.Camera, user_type: this.UserType});
+		this.VisualKeeper = new _LocalVisualKeeper({scene: this.Scene, camera: this.Camera});
 		this.Stream = json_params.stream;
 
 		this.Controls = new THREE.FlyControls(this.VisualKeeper.getVideoMesh(), document.getElementById("MainContainer"));
@@ -37,7 +38,8 @@ var _LocalUser = function (json_params)
 		this.Raycaster = new THREE.Raycaster();
 		this.MouseVector = new THREE.Vector2();
 		this.INTERSECTED = null;
-		
+
+
 	}else
 		console.log(this.constructor.name + " have no json_params!");
 
@@ -104,6 +106,35 @@ _LocalUser.prototype.setPointsCallback = function (num)
 	{
 		this.showVisualChatControls();
 	}
+};
+
+_LocalUser.prototype.updateVisavisCounter = function ()
+{
+};
+
+_LocalUser.prototype.addTargetMeshToMeshesArray = function (mesh)
+{
+	this.VisavisCounter.MeshesArray.push(mesh);
+	this.getVisualKeeper().getVideoMesh().add(mesh);	
+	for(var i=0; i< this.VisavisCounter.MeshesArray.length; i++)
+	{
+		this.VisavisCounter.MeshesArray[i].position.set(-18 + i*5, 19, -50);
+	}
+	this.VisavisCounter.Div.firstChild.data = "Визави: " + this.AllUsers[1].length;
+	this.VisavisCounter.LastNum = this.AllUsers[1].length;
+};
+
+_LocalUser.prototype.removeTargetMeshFromMeshesArray = function (mesh)
+{
+	for(var i=0; i< this.VisavisCounter.MeshesArray.length; i++)
+	{
+		if(this.VisavisCounter.MeshesArray[i] === mesh){
+			this.VisavisCounter.MeshesArray.splice(i, 1);
+			this.getVisualKeeper().getVideoMesh().remove(mesh);	
+		}
+	}
+	this.VisavisCounter.Div.firstChild.data = "Визави: " + this.AllUsers[1].length;
+	this.VisavisCounter.LastNum = this.AllUsers[1].length;
 };
 
 _LocalUser.prototype.addPoints = function (num)
@@ -377,7 +408,7 @@ var _RemoteUser = function (json_params)
 		this.Connection = json_params.connection;
 		this.NetMessagesObject = json_params.net_messages_object;
 		this.AllUsers = json_params.all_users;
-		this.VisualKeeper = new _VisualKeeper({scene: this.Scene, random: true, user_type: this.UserType});
+		this.VisualKeeper = new _RemoteVisualKeeper({scene: this.Scene, random: true});
 		this.ID = json_params.id;		
 		
 	}else
@@ -469,6 +500,7 @@ _RemoteUser.prototype.disconnect = function()
 	this.Connection.close();
 	this.MediaConnection.close();
 	this.ConnectionStatus = "closed";
+	this.AllUsers[0].removeTargetMeshFromMeshesArray(this.VisualKeeper.getTargetMesh());
 	this.VisualKeeper.removeFromScene();
 	console.log("connection was closed");
 
@@ -514,7 +546,6 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 
 	case REQUESTS.UTOU.GET_YOUR_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
 		this.Person.setVideoMeshCaseParametersByJSON(json_params);
-		this.Person.setVideoMeshCaseByMeshIndex();		
 		this.setVisualKeeperByPersonAndAddToScene();
 		this.NetMessagesObject.setSendMyVisualKeeperCaseMeshParametersDataMessage(this.AllUsers[0].getPerson().getAllVideoMeshCaseParametersForNetMessageJSON());
 		this.Connection.send(JSON.stringify(this.NetMessagesObject.SendMyVisualKeeperCaseMeshParametersMessage));
@@ -522,7 +553,6 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 
 	case REQUESTS.UTOU.SEND_MY_VISUAL_KEEPER_CASE_MESH_PARAMETERS:
 		this.Person.setVideoMeshCaseParametersByJSON(json_params);
-		this.Person.setVideoMeshCaseByMeshIndex();
 		this.setVisualKeeperByPersonAndAddToScene();
 	break;
 
@@ -554,13 +584,17 @@ _RemoteUser.prototype.onDataRecieved = function (json_params)
 
 _RemoteUser.prototype.setVisualKeeperByPersonAndAddToScene = function ()
 {
+	this.AllUsers[0].removeTargetMeshFromMeshesArray(this.VisualKeeper.getTargetMesh());
 	this.VisualKeeper.removeCaseMeshFromScene();
 	this.VisualKeeper.setVisualMeshCase(this.Person.getVideoMeshCase());
+	this.VisualKeeper.setTargetMesh(this.Person.getTargetMesh());
+	this.AllUsers[0].addTargetMeshToMeshesArray(this.VisualKeeper.getTargetMesh());
 	this.VisualKeeper.addCaseMeshToScene();
 };
 
 _RemoteUser.prototype.update = function ()
 {
+	this.VisualKeeper.update();
 };
 
 _RemoteUser.prototype.getVideoMesh = function ()

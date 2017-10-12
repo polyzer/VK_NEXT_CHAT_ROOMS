@@ -198,7 +198,13 @@ _Person.prototype.saveOpenMeshesToDB = function ()
 };
 _Person.prototype.setCaseMeshIndex = function (index)
 {
-	this.CaseMeshIndex = index;
+	if(index)
+		this.VideoMesh.CaseMeshIndex = index;
+	else{
+		this.VideoMesh.CaseMeshIndex = CASE_MESHES_INDEXES.CUBE;
+		throw new Error("No case mesh index!");
+	}
+
 };
 
 /*Ёбаный обработчик успешного сохранения*/
@@ -243,7 +249,7 @@ _Person.prototype.setLoadedCustomViewParameters = function (json_params)
 	/*Если сервер сказал, что данные доступны!*/
 	if(json_params["server_answer"] === "YES_DATA")
 	{
-		this.VideoMesh.CaseMeshIndex = json_params["result_datas"]["case_mesh_index"];
+		this.setCaseMeshIndex(json_params["result_datas"]["case_mesh_index"]);
 		this.OpenMeshes = json_params["result_datas"]["open_meshes"].split(",");
 
 	} else if(json_params["server_answer"] === "NO_DATA")
@@ -275,11 +281,6 @@ _Person.prototype.parseVKVars = function ()
 _Person.prototype.getCaseMeshIndex = function ()
 {
 	return this.VideoMesh.CaseMeshIndex;
-};
-
-_Person.prototype.setCaseMeshIndex = function (index)
-{
-	this.VideoMesh.CaseMeshIndex = index;
 };
 
 _Person.prototype.setNickname = function (nick)
@@ -368,7 +369,8 @@ var _RemotePerson = function (json_params)
 	this.MeshesBase = GLOBAL_OBJECTS.getMeshesBase();
 	this.VideoMesh = {
 		Case: null,
-		CaseMeshIndex: CASE_MESHES_INDEXES.CUBE
+		CaseMeshIndex: CASE_MESHES_INDEXES.CUBE,
+		TargetMesh: null
 	};
 }
 /*Функция вроде как устанавливает необходимые параметры и материалы структуры КУБА*/
@@ -376,27 +378,31 @@ _RemotePerson.prototype.setVideoMeshCaseParametersByJSON = function (json_params
 {
 	this.VideoMesh.CaseMeshIndex = json_params.data.case_mesh_index;
 	
+	this.VideoMesh.Case = this.MeshesBase.getMeshCopyByIndex(this.VideoMesh.CaseMeshIndex);
+
+	this.VideoMesh.TargetMesh = this.MeshesBase.getTargetMeshCopyByIndex(this.VideoMesh.CaseMeshIndex);
+
 	if(this.VideoMesh.CaseMeshIndex === CASE_MESHES_INDEXES.CUBE)
 	{
 		this.VideoMesh.Case.material.opacity = json_params.data.opacity;
 		this.VideoMesh.Case.material.color.setStyle(json_params.data.face_color);
 		this.VideoMesh.Case.children[0].material.color.setStyle(json_params.data.edge_color);
-	}
-};
 
-/*Устанавливает текущий Mesh по индексу.*/
-_RemotePerson.prototype.setVideoMeshCaseByMeshIndex = function (index)
-{
-	if(index)
-	{
-		this.VideoMesh.Case = this.MeshesBase.getMeshCopyByIndex(index);
-	}else
-	{
-		this.VideoMesh.Case = this.MeshesBase.getMeshCopyByIndex(this.VideoMesh.CaseMeshIndex);
+		this.VideoMesh.TargetMesh.material.opacity = json_params.data.opacity;
+		this.VideoMesh.TargetMesh.material.color.setStyle(json_params.data.face_color);
+		this.VideoMesh.TargetMesh.children[0].material.color.setStyle(json_params.data.edge_color);
 	}
 };
 
 _RemotePerson.prototype.getVideoMeshCase = function ()
 {
 	return this.VideoMesh.Case;
+};
+_RemotePerson.prototype.getTargetMesh = function ()
+{
+	return this.VideoMesh.TargetMesh;
+};
+_RemotePerson.prototype.getVideoMeshCaseMeshIndex = function ()
+{
+	return this.VideoMesh.CaseMeshIndex;
 };

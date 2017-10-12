@@ -122,7 +122,9 @@ var _VKSpaceChat = function (json_params)
 	this.Peer.on("error", function (err) {
 		console.log(err.type);
 	});
-
+	/**
+	Счётчик наших визави. Занимается отображением
+	*/
 	this.VisavisCounter = {};
 	this.VisavisCounter.Div = document.createElement("div");
 	this.VisavisCounter.Div.appendChild(document.createTextNode("Визави: 0"));
@@ -164,7 +166,8 @@ _VKSpaceChat.prototype.onOpenInitAndStartGame = function (e)
 		stream: GLOBAL_OBJECTS.getStream(),
 		peer: this.Peer,
 		cssscene: this.CSSScene,
-		chat_controls_callback_bf: this.onFindNewRoomBF
+		chat_controls_callback_bf: this.onFindNewRoomBF,
+		visavis_counter: this.VisavisCounter
 	});
 
 	this.AllUsers.push(this.LocalUser);
@@ -326,31 +329,8 @@ _VKSpaceChat.prototype.makeCallsToAllRemoteUsers = function (stream)
 
 _VKSpaceChat.prototype.updateVisavisCounter = function ()
 {
-	if(this.AllUsers[1].length !== this.VisavisCounter.LastNum)
-	{
-		this.VisavisCounter.Div.removeChild(this.VisavisCounter.Div.firstChild); 
-		this.VisavisCounter.Div.appendChild(document.createTextNode("Визави: " + this.AllUsers[1].length));
-		this.VisavisCounter.LastNum = this.AllUsers[1].length;
-		while(this.VisavisCounter.MeshesArray.length > 0)
-		{
-			this.AllUsers[0].getVisualKeeper().getVideoMesh().remove(this.VisavisCounter.MeshesArray[0]);
-			this.VisavisCounter.MeshesArray.splice(0,1);
-		}
-		for(var i=0; i< this.AllUsers[1].length; i++)
-		{
-			this.VisavisCounter.MeshesArray.push(this.AllUsers[1][i].getVisualKeeper().TargetMesh);
-			this.VisavisCounter.MeshesArray[i].position.set(-18 + i*5, 19, -50);
-			this.AllUsers[0].getVisualKeeper().getVideoMesh().add(this.VisavisCounter.MeshesArray[i]);
-		}
-	} else
-	{
-		for(var i=0; i< this.VisavisCounter.MeshesArray.length; i++)
-		{
-			this.VisavisCounter.MeshesArray[i].rotation.copy(this.AllUsers[1][i].getVisualKeeper().getVideoMesh().rotation);
-		}		
-	}
-};
 
+};
 
 _VKSpaceChat.prototype.collisionStand = function ()
 {
@@ -385,7 +365,7 @@ _VKSpaceChat.prototype.updateWorkingProcess = function ()
 	}
 	this.LocalUser.update(Date.now() - this.Time);
 	this.Time = Date.now();
-	this.updateVisavisCounter();
+//	this.LocalUser.updateVisavisCounter();
 	if(this.updating === true)
 		this.requestID = requestAnimationFrame(this.updateWorkingProcessBF);
 }

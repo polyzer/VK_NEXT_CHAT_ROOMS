@@ -20,70 +20,79 @@ var _MeshesBase = function ()
 		new THREE.EdgesGeometry( this.CubeMesh.geometry ), 
 		new THREE.LineBasicMaterial( { color: 0xffffff*Math.random(), linewidth: 2 } )
 	));
-
+	this.CubeMesh.name = CASE_MESHES_INDEXES.CUBE;
 	this.TargetCubeMesh = this.CubeMesh.clone();
 	this.TargetCubeMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.MercuryMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_mercury.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_mercury.png"), transparent: true})
 	);
+	this.MercuryMesh.name = CASE_MESHES_INDEXES.PLANET_MERCURY;
 	this.TargetMercuryMesh = this.MercuryMesh.clone();
 	this.TargetMercuryMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.VenusMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_venus.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_venus.png"), transparent: true})
 	);
+	this.VenusMesh.name = CASE_MESHES_INDEXES.PLANET_VENUS;
 	this.TargetVenusMesh = this.VenusMesh.clone();
 	this.TargetVenusMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.EarthMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_earth.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_earth.png"), transparent: true})
 	);
+	this.EarthMesh.name = CASE_MESHES_INDEXES.PLANET_EARTH;
 	this.TargetEarthMesh = this.EarthMesh.clone();
 	this.TargetEarthMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.MarsMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_mars.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_mars.png"), transparent: true})
 	);
+	this.MarsMesh.name = CASE_MESHES_INDEXES.PLANET_MARS;
 	this.TargetMarsMesh = this.MarsMesh.clone();
 	this.TargetMarsMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.JupiterMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_jupiter.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_jupiter.png"), transparent: true})
 	);
+	this.JupiterMesh.name = CASE_MESHES_INDEXES.PLANET_JUPITER;
 	this.TargetJupiterMesh = this.JupiterMesh.clone();
 	this.TargetJupiterMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.SaturnMesh = new THREE.Mesh(
 		new  THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_saturn.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_saturn.png"), transparent: true})
 	);
+	this.SaturnMesh.name = CASE_MESHES_INDEXES.PLANET_SATURN;
 	this.TargetSaturnMesh = this.SaturnMesh.clone();
 	this.TargetSaturnMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.UranusMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_uranus.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_uranus.png"), transparent: true})
 	);
+	this.UranusMesh.name = CASE_MESHES_INDEXES.PLANET_URANUS;
 	this.TargetUranusMesh = this.UranusMesh.clone();
 	this.TargetUranusMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.NeptuneMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_neptune.png")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_neptune.png"), transparent: true})
 	);
+	this.NeptuneMesh.name = CASE_MESHES_INDEXES.PLANET_NEPTUNE;
 	this.TargetNeptuneMesh = this.NeptuneMesh.clone();
 	this.TargetNeptuneMesh.scale.set(0.2, 0.2, 0.2);
 
 	this.SunMesh = new THREE.Mesh(
 		new THREE.SphereGeometry(this.radius, 40, 40),
-		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_sun.gif")})
+		new THREE.MeshStandardMaterial({map: new THREE.ImageUtils.loadTexture("./models/textures/tex_sun.gif"), transparent: true})
 	);
+	this.SunMesh.name = CASE_MESHES_INDEXES.SUN;
 	this.TargetSunMesh = this.SunMesh.clone();
 	this.TargetSunMesh.scale.set(0.2, 0.2, 0.2);
 
@@ -182,16 +191,19 @@ _MeshesBase.prototype.onSceneLoaded = function (scene)
 		},
 		Tardis: { 
 			Mesh: scene.getObjectByName(CASE_MESHES_INDEXES.TARDIS), 
-			TargetMesh: scene.getObjectByName(CASE_MESHES_INDEXES.TARDIS),
+			TargetMesh: null,
 			Description: "TARDIS",
 			Index: CASE_MESHES_INDEXES.TARDIS,
 			Price: 0,
 			Customizable: false
 		},
 	};
-	
+	this.CaseMeshesWithDescriptions.Tardis.TargetMesh = this.CaseMeshesWithDescriptions.Tardis.Mesh.clone();
+	this.CaseMeshesWithDescriptions.Tardis.Mesh.material.transparent = true;
 	this.CaseMeshesWithDescriptions.Tardis.Mesh.scale.set(30,30,30);
 	this.CaseMeshesWithDescriptions.Tardis.Mesh.rotation.z = 90;
+
+	this.CaseMeshesWithDescriptions.Tardis.TargetMesh.scale.set(0.2, 0.2, 0.2);
 	/*
 		В конце, после загрузки всех текс мы создаем персону и Меню;
 	*/
