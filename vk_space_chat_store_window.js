@@ -194,6 +194,11 @@ _StoreWindow.prototype.setCustomizeUIElementsByJSON = function (json_params)
 /*Обработчик нажатия на кнопку покупки*/
 _StoreWindow.prototype.onBuyObjectButtonClick = function ()
 {
+	var params = { 
+	    type: 'item', 
+	    item: 'item_25new' 
+  	}; 
+  	VK.callMethod('showOrderBox', params);
 	this.Person.addMeshIndexToOpenMeshesAndSaveToDB(this.ShowCaseMeshData.CaseMeshIndex);
 };
 
