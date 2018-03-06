@@ -8,49 +8,85 @@
 <head>
 <meta charset="UTF-8" /> 
 <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-<link rel="stylesheet" href="./vk_space_chat.css" />
+<link rel="stylesheet" href="./src/css/styles.css" />
 
-<script src="../games_resources/libs/AdapterJS-master/publish/adapter.min.js"></script>
-<script src='../games_resources/libs/three.js-87/build/three.min.js'></script>
-<script src='../games_resources/libs/three.js-87/examples/js/controls/FlyControls.js'></script>
-<script src='../games_resources/libs/three.js-87/examples/js/renderers/CSS3DRenderer.js'></script>
-<script src='../games_resources/libs/three.js-87/examples/js/loaders/ColladaLoader2.js'></script>
-<script src="../games_resources/libs/jquery.js"></script>
-<script src="../games_resources/libs/peer.min.js"></script>
+<script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+<script src="./src/js/adapter.min.js"></script>
+<script src='./src/js/three.min.js'></script>
+<script src='./src/js/FlyControls.js'></script>
+<script src='./src/js/CSS3DRenderer.js'></script>
+<script src='./src/js/ColladaLoader2.js'></script>
+<script src="./src/js/jquery.js"></script>
+<script src="./src/js/peer.min.js"></script>
 
-<script src="./vk_space_chat_meshes_base.js"></script>
-<script src="./vk_space_chat_constants_and_general_functions.js"></script>
-<script src="./vk_space_chat_net_messages.js"></script>
-<script src="./vk_space_chat_person.js"></script>
-<script src="./vk_space_chat.js"></script>
-<script src="./vk_space_chat_store_window.js"></script>
-<script src="./vk_space_chat_menu.js"></script>
-<script src="./vk_space_chat_users.js"></script>
-<script src="./vk_space_chat_visual_keeper.js"></script>
-<script src="./vk_space_chat_hint.js"></script>
-<script src="./vk_space_chat_my_controls.js"></script>
-<script src="./vk_space_chat_flying_objects.js"></script>
-<script src="./vk_space_chat_user_chat_controls.js"></script>
-<script src="./vk_space_chat_collecting_objects.js"></script>
-<script src="./vk_space_chat_bad_blocks.js"></script>
-<script src="./vk_space_chat_global_objects.js"></script>
+<script src="./src/js/DeviceOrientationControls.js"></script>
+<script src="./src/js/meshes_base.js"></script>
+<script src="./src/js/constants_and_general_functions.js"></script>
+<script src="./src/js/net_messages.js"></script>
+<script src="./src/js/person.js"></script>
+<script src="./src/js/main.js"></script>
+<script src="./src/js/store_window.js"></script>
+<script src="./src/js/menu.js"></script>
+<script src="./src/js/users.js"></script>
+<script src="./src/js/visual_keeper.js"></script>
+<script src="./src/js/hint.js"></script>
+<script src="./src/js/my_controls.js"></script>
+<script src="./src/js/flying_objects.js"></script>
+<script src="./src/js/user_chat_controls.js"></script>
+<script src="./src/js/collecting_objects.js"></script>
+<script src="./src/js/bad_blocks.js"></script>
+<script src="./src/js/global_objects.js"></script>
 
-<script src="https://vk.com/js/api/xd_connection.js?2"  type="text/javascript"></script>
+<script>
+	var OrientationParameters = {
+		alpha: 0,
+		beta: 0,
+		gamma: 0,
+		deviceMotionInterval: 0,
+		
+		touchRotRadX: 0,
+		touchRotRadY: 0,
+		touchDeltaTime: 0,
+		
+		shakeTimer: 0,
+		shakeTimerStep: 0.1
+	};
+	var CONTROL_PARAMETERS = {
+		TYPE: {
+			ACCELEROMETER: 0,
+			TOUCH: 1
+		}
+	};
+
+
+	var ControlParameters = {
+		Type: CONTROL_PARAMETERS.TYPE.ACCELEROMETER,
+		Clicked: false
+	};
+</script>
+
+	<style>
+
+
+
+	</style>
+
+
 </head>
 
 <body>
 <div id="training_page_div">
 	<div id="close_training_page_div_button">Закрыть</div>
-	<video width=600 height=415 src="./video/vis_a_vis_video.mp4"  controls></video>
+	<video width=600 height=415 src="./src/video/vis_a_vis_video.mp4"  controls></video>
 	<p class="p_class">
 		Ваша цель перемещаться между комнатами для общения с другими игроками! Чтобы перейти в следующую комнату, Вам необходимо набрать >= 1000 очков. Чтобы набрать очки можно собирать кубы определенного цвета, которые видите только Вы. Так же очки даются за общение с другими пользователями (нужно прилететь к другому пользователю так близко, пока вы не услышите звук). Все пользователи могут видеть и слышать друг друга, если подлетят на достаточно близкое расстояние. Заводите новых друзей, летайте и развлекайтесь с Визави (Vis-a-Vis).
 	</p>
-	<img src="./models/screens/1_description.png" width=600 height=412 style="left: 50%;" />
+	<img src="./src/models/screens/1_description.png" width=600 height=412 style="left: 50%;" />
 	<p class="p_class">
 		При переходах между комнатами, Вы можете попасть не к другим пользователям, а в комнату со странными злыми существами - Охотниками. Они будут стремиться выбросить Вас из игры! Чтобы не допустить этого, Вам нужно как можно скорее раздобыть >= 1000 очков для перехода в следующую комнату! (и не факт, что Вас снова не забросит к Охотникам :) 
 		Вот так они выглядят:
 	</p>
-	<img src="./models/screens/4.png" width=600 height=412 style="align: center;" />
+	<img src="./src/models/screens/4.png" width=600 height=412 style="align: center;" />
 	<p class="p_class">
 		Очки начисляются только за сбор кубов того вида, что изображен у Вас на экране внизу! 
 		Таких кубов в одной комнате 5-7.  
@@ -87,6 +123,30 @@
 
 
 <script>
+
+
+	var ChangeControlButton = document.createElement("button");
+	ChangeControlButton.setAttribute("id", "ChangeControlButton");
+    ChangeControlButton.className = "TouchControlButton";
+    document.body.appendChild(ChangeControlButton);
+
+	ChangeControlButton.addEventListener("click", function () {
+		if(ControlParameters.Type === CONTROL_PARAMETERS.TYPE.ACCELEROMETER)
+		{
+			ControlParameters.Type = CONTROL_PARAMETERS.TYPE.TOUCH;
+			ChangeControlButton.classList.remove("TouchControlButton");
+			ChangeControlButton.classList.add("AccelerometerControlButton");
+		} else
+		{
+			ControlParameters.Type = CONTROL_PARAMETERS.TYPE.ACCELEROMETER;				
+			ChangeControlButton.classList.remove("AccelerometerControlButton");
+			ChangeControlButton.classList.add("TouchControlButton");
+		}
+
+		ControlParameters.Clicked = true;
+
+	});
+
 
 if(typeof(VK) !== "undefined")
 {
@@ -131,6 +191,52 @@ if(isUsingPlugin === true)
 
 });
 </script>
+
+<script>
+// Функция тестирует акселерометр на показания данных
+ function testDeviceMotion(event) {
+	// Если браузер поддерживает событие, но данные
+	// передаются как undefined||null, значит, что устройство
+	// не поддерживает акселерометр,
+	// иначе данные были бы числом.
+	if(!event.rotationRate.alpha)
+	{
+		// Если у нас данные - не число, то удаляем все собственные обработчики;
+		// чтобы они за зря не крутились
+		window.removeEventListener("devicemotion", testDeviceMotion);			
+		ControlParameters.Type = CONTROL_PARAMETERS.TYPE.TOUCH;
+		document.body.removeChild(ChangeControlButton);
+	} else {
+		// если данные являются числом, то устройство имеет акселерометр,
+		// устанавливаем нормальный обработчик и удаляем тестовый;
+		window.addEventListener("devicemotion", onDeviceMotion);			
+		window.removeEventListener("devicemotion", testDeviceMotion);			
+	}
+};
+
+
+// Наш обработчик ускорения
+ function onDeviceMotion(event) {
+
+	OrientationParameters.alpha = event.rotationRate.alpha;
+	OrientationParameters.beta = -event.rotationRate.beta;
+	OrientationParameters.deviceMotionInterval = event.interval;
+
+	OrientationParameters.phi = 0;
+	OrientationParameters.theta = 0;
+};
+
+	///////////////////////////////////////////////
+	// Определяем, поддерживает ли устройство акселерометр!
+	if (window.DeviceMotionEvent != undefined) {
+		window.addEventListener("devicemotion", testDeviceMotion);
+	} else {
+		ControlParameters.Type = CONTROL_PARAMETERS.TYPE.TOUCH;
+		document.body.removeChild(ChangeControlButton);
+	}
+</script>
+
+
 </body>
 </html>
 

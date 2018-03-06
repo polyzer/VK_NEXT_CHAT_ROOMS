@@ -41,7 +41,7 @@ if ($sig != md5($str.$secret_key)) {
       if ($item == 'item1') { 
         $response['response'] = array( 
           'item_id' => 25, 
-          'title' => '300 золотых монет', 
+          'title' => 'Меркурий', 
           'photo_url' => 'http://somesite/images/coin.jpg', 
           'price' => 5 
         ); 
