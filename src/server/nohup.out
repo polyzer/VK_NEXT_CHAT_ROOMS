@@ -1,0 +1,80 @@
+new user was created id: f5jsby8apkbozsf5
+New Room ID: IUJyaLenZV was created, and User ID: f5jsby8apkbozsf5 was add there
+NOT NULL: IUJyaLenZV
+f5jsby8apkbozsf5 was spliced from Room, and deleted
+new user was created id: 964y5zjhobbu6l4l
+New Room ID: d1eSTGOKKi was created, and User ID: 964y5zjhobbu6l4l was add there
+module.js:471
+    throw err;
+    ^
+
+Error: Cannot find module '/var/www/polyzer.org/public_html/vk_games/vk_vis_rooms_multi/src/server/server.js'
+    at Function.Module._resolveFilename (module.js:469:15)
+    at Function.Module._load (module.js:417:25)
+    at Module.runMain (module.js:604:10)
+    at run (bootstrap_node.js:394:7)
+    at startup (bootstrap_node.js:149:9)
+    at bootstrap_node.js:509:3
+new user was created id: mcnykz00v8dgt64m
+New Room ID: e1gsxI32iW was created, and User ID: mcnykz00v8dgt64m was add there
+new user was created id: efja4y2qzb23y157
+new user was created id: fjo6k5mqm5e0ifie
+NOT NULL: e1gsxI32iW
+mcnykz00v8dgt64m was spliced from Room, and deleted
+efja4y2qzb23y157 was spliced from AllUsers.
+fjo6k5mqm5e0ifie was spliced from AllUsers.
+new user was created id: wl1y24ag1nmoc665
+New Room ID: ltk5GSfALB was created, and User ID: wl1y24ag1nmoc665 was add there
+new user was created id: lqlg74uljt6uzw37
+NOT NULL: ltk5GSfALB
+wl1y24ag1nmoc665 was spliced from Room, and deleted
+new user was created id: 6739xeubhb7swuay
+NOT NULL: ltk5GSfALB
+6739xeubhb7swuay was spliced from Room, and deleted
+new user was created id: lysa4d1c3poyzz93
+NOT NULL: ltk5GSfALB
+lqlg74uljt6uzw37 was spliced from Room, and deleted
+NOT NULL: ltk5GSfALB
+lysa4d1c3poyzz93 was spliced from Room, and deleted
+new user was created id: y95k87hh0dhc8xcd
+New Room ID: N5LqWtOU3y was created, and User ID: y95k87hh0dhc8xcd was add there
+NOT NULL: N5LqWtOU3y
+y95k87hh0dhc8xcd was spliced from Room, and deleted
+new user was created id: 24ytttgpo12f88d1
+24ytttgpo12f88d1 was spliced from AllUsers.
+new user was created id: iag9ac3i1wf3kn9g
+iag9ac3i1wf3kn9g was spliced from AllUsers.
+new user was created id: 7801wholkozk4x2q
+New Room ID: ZPLbcuTpRi was created, and User ID: 7801wholkozk4x2q was add there
+NOT NULL: ZPLbcuTpRi
+7801wholkozk4x2q was spliced from Room, and deleted
+new user was created id: 1y2wq75yiznanhmb
+new user was created id: 71dsyzs7bwk17s9h
+New Room ID: YMqoJPvF6h was created, and User ID: 1y2wq75yiznanhmb was add there
+NOT NULL: YMqoJPvF6h
+1y2wq75yiznanhmb was spliced from Room, and deleted
+NOT NULL: YMqoJPvF6h
+71dsyzs7bwk17s9h was spliced from Room, and deleted
+new user was created id: 1ao6rbdequxf2m99
+New Room ID: GkLx6vLyJz was created, and User ID: 1ao6rbdequxf2m99 was add there
+new user was created id: x9oetvnumgzsebvq
+NOT NULL: GkLx6vLyJz
+x9oetvnumgzsebvq was spliced from Room, and deleted
+NOT NULL: GkLx6vLyJz
+1ao6rbdequxf2m99 was spliced from Room, and deleted
+new user was created id: ec8yj59o6n0gn9p6
+ec8yj59o6n0gn9p6 was spliced from AllUsers.
+new user was created id: 1ufldbbg6nvolavs
+1ufldbbg6nvolavs was spliced from AllUsers.
+new user was created id: wh4mldd3pf2stu4d
+New Room ID: SNoEQngOkR was created, and User ID: wh4mldd3pf2stu4d was add there
+new user was created id: ch0cihfh8zys0sm2
+NOT NULL: SNoEQngOkR
+wh4mldd3pf2stu4d was spliced from Room, and deleted
+NOT NULL: SNoEQngOkR
+ch0cihfh8zys0sm2 was spliced from Room, and deleted
+new user was created id: z7k827t0vs4ojj4j
+New Room ID: QVIPoHf1ER was created, and User ID: z7k827t0vs4ojj4j was add there
+new user was created id: i7a9j9hqpfc48e22
+NOT NULL: QVIPoHf1ER
+i7a9j9hqpfc48e22 was spliced from Room, and deleted
