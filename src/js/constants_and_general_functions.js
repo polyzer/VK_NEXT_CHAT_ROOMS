@@ -9,6 +9,11 @@ var USER_TYPES = {
 	REMOTE: 1
 };
 
+var DEVICE_TYPES = {
+	MOBILE: 0,
+	DESKTOP: 1
+}
+
 var RETURN_NOTHING = "0";
 
 var HINT_SHOW_TIME_MSECS = 3000;

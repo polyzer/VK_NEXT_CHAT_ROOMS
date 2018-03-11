@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 <link rel="stylesheet" href="./src/css/styles.css" />
 
+<script src="https://unpkg.com/current-device/umd/current-device.min.js"></script>
 <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
 <script src="./src/js/adapter.min.js"></script>
 <script src='./src/js/three.min.js'></script>
@@ -37,43 +38,7 @@
 <script src="./src/js/bad_blocks.js"></script>
 <script src="./src/js/global_objects.js"></script>
 
-<script>
-	var OrientationParameters = {
-		alpha: 0,
-		beta: 0,
-		gamma: 0,
-		deviceMotionInterval: 0,
-		
-		touchRotRadX: 0,
-		touchRotRadY: 0,
-		touchDeltaTime: 0,
-		
-		shakeTimer: 0,
-		shakeTimerStep: 0.1
-	};
-	var CONTROL_PARAMETERS = {
-		TYPE: {
-			ACCELEROMETER: 0,
-			TOUCH: 1
-		}
-	};
-
-
-	var ControlParameters = {
-		Type: CONTROL_PARAMETERS.TYPE.ACCELEROMETER,
-		Clicked: false
-	};
-</script>
-
-	<style>
-
-
-
-	</style>
-
-
 </head>
-
 <body>
 <div id="training_page_div">
 	<div id="close_training_page_div_button">Закрыть</div>
@@ -123,31 +88,23 @@
 
 
 <script>
+	var DEVICE_TYPES = {
+		MOBILE: 0,
+		DESKTOP: 1
+	}
+	var DeviceType = null;
+  var testExp = new RegExp('Android|webOS|iPhone|iPad|' +
+    		       'BlackBerry|Windows Phone|'  +
+    		       'Opera Mini|IEMobile|Mobile' , 
+    		      'i');
+  
+  if (testExp.test(navigator.userAgent))
+  	DeviceType = DEVICE_TYPES.MOBILE;
+  else
+  	DeviceType = DEVICE_TYPES.DESKTOP;
 
-
-	var ChangeControlButton = document.createElement("button");
-	ChangeControlButton.setAttribute("id", "ChangeControlButton");
-    ChangeControlButton.className = "TouchControlButton";
-    document.body.appendChild(ChangeControlButton);
-
-	ChangeControlButton.addEventListener("click", function () {
-		if(ControlParameters.Type === CONTROL_PARAMETERS.TYPE.ACCELEROMETER)
-		{
-			ControlParameters.Type = CONTROL_PARAMETERS.TYPE.TOUCH;
-			ChangeControlButton.classList.remove("TouchControlButton");
-			ChangeControlButton.classList.add("AccelerometerControlButton");
-		} else
-		{
-			ControlParameters.Type = CONTROL_PARAMETERS.TYPE.ACCELEROMETER;				
-			ChangeControlButton.classList.remove("AccelerometerControlButton");
-			ChangeControlButton.classList.add("TouchControlButton");
-		}
-
-		ControlParameters.Clicked = true;
-
-	});
-
-
+  
+     			 
 if(typeof(VK) !== "undefined")
 {
 	VK.init(function() { 
@@ -190,50 +147,6 @@ if(isUsingPlugin === true)
 	});
 
 });
-</script>
-
-<script>
-// Функция тестирует акселерометр на показания данных
- function testDeviceMotion(event) {
-	// Если браузер поддерживает событие, но данные
-	// передаются как undefined||null, значит, что устройство
-	// не поддерживает акселерометр,
-	// иначе данные были бы числом.
-	if(!event.rotationRate.alpha)
-	{
-		// Если у нас данные - не число, то удаляем все собственные обработчики;
-		// чтобы они за зря не крутились
-		window.removeEventListener("devicemotion", testDeviceMotion);			
-		ControlParameters.Type = CONTROL_PARAMETERS.TYPE.TOUCH;
-		document.body.removeChild(ChangeControlButton);
-	} else {
-		// если данные являются числом, то устройство имеет акселерометр,
-		// устанавливаем нормальный обработчик и удаляем тестовый;
-		window.addEventListener("devicemotion", onDeviceMotion);			
-		window.removeEventListener("devicemotion", testDeviceMotion);			
-	}
-};
-
-
-// Наш обработчик ускорения
- function onDeviceMotion(event) {
-
-	OrientationParameters.alpha = event.rotationRate.alpha;
-	OrientationParameters.beta = -event.rotationRate.beta;
-	OrientationParameters.deviceMotionInterval = event.interval;
-
-	OrientationParameters.phi = 0;
-	OrientationParameters.theta = 0;
-};
-
-	///////////////////////////////////////////////
-	// Определяем, поддерживает ли устройство акселерометр!
-	if (window.DeviceMotionEvent != undefined) {
-		window.addEventListener("devicemotion", testDeviceMotion);
-	} else {
-		ControlParameters.Type = CONTROL_PARAMETERS.TYPE.TOUCH;
-		document.body.removeChild(ChangeControlButton);
-	}
 </script>
 
 

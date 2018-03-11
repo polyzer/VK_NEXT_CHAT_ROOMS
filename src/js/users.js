@@ -35,73 +35,20 @@ var _LocalUser = function (json_params)
 		// this.Controls.autoForward = false;
 		// this.Controls.dragToLook = false;
 		// // accelerometer orientation controller
-
-
-		this.FrontMovingButton = document.createElement("div");
-		this.FrontMovingButton.setAttribute("id", "FrontMovingButton");
-	    this.FrontMovingButton.className = "FrontMovingButton";
-		document.body.appendChild(this.FrontMovingButton);
-		this.FrontMovingButton.onmousedown = function (event)
+		if(GLOBAL_OBJECTS.DeviceType === DEVICE_TYPES.MOBILE)
 		{
-		 	this.FrontMovingOn = true;
-		}.bind(this);
+			this.Controls = new THREEx.ComputerMobileControls({
+				Object3D: this.VisualKeeper.getVideoMesh(),
+				Camera: this.Camera
+			});
+		} else {
+			this.Controls = new THREE.FlyControls(this.VisualKeeper.getVideoMesh(), document.getElementById("MainContainer"));
+			this.Controls.movementSpeed = 90;
+			this.Controls.rollSpeed = Math.PI / 42;
+			this.Controls.autoForward = false;
+			this.Controls.dragToLook = false;
+		}
 
-		this.FrontMovingButton.ontouchstart = function (event)
-		{
-		 	this.FrontMovingOn = true;
-		}.bind(this);
-
-		this.FrontMovingButton.onmouseup = function (event)
-		{
-		 	this.FrontMovingOn = false;
-		}.bind(this);
-
-		this.FrontMovingButton.ontouchend = function (event)
-		{
-		 	this.FrontMovingOn = false;
-		}.bind(this);
-
-		this.BackMovingButton = document.createElement("div");
-		this.BackMovingButton.setAttribute("id", "BackMovingButton");
-	    this.BackMovingButton.className = "BackMovingButton";
-		document.body.appendChild(this.BackMovingButton);
-		this.BackMovingButton.onmousedown = function (event)
-		{
-		 	this.BackMovingOn = true;
-		}.bind(this);
-
-		this.BackMovingButton.ontouchstart = function (event)
-		{
-		 	this.BackMovingOn = true;
-		}.bind(this);
-
-		this.BackMovingButton.onmouseup = function (event)
-		{
-		 	this.BackMovingOn = false;
-		}.bind(this);
-
-		this.BackMovingButton.ontouchend = function (event)
-		{
-		 	this.BackMovingOn = false;
-		}.bind(this);
-
-
-
-		//mouse/touch controller
-		this.RotateHammer = new Hammer(document.body);
-		this.RotateHammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-		this.RotateHammer.on("pan", function (event) {
-
-			OrientationParameters.touchRotRadX = THREE.Math.degToRad(event.deltaX/30);
-			OrientationParameters.touchRotRadY = THREE.Math.degToRad(event.deltaY/30);
-			OrientationParameters.touchDeltaTime = event.deltaTime;
-
-			// this.camera.rotation.y -= THREE.Math.degToRad(event.deltaX/20);
-			// this.camera.rotation.x -= THREE.Math.degToRad(event.deltaY/20);
-		}.bind(this));
-
-
-		this.Controls = new THREE.DeviceOrientationControls(this.Camera);
 
 		
 		this.Raycaster = new THREE.Raycaster();
@@ -396,66 +343,12 @@ _LocalUser.prototype.movingControl = function ()
 
 };
 
-_LocalUser.prototype.controlUpdate = function(delta)
-{
-
-	delta /= 100;
-	if(ControlParameters.Type === CONTROL_PARAMETERS.TYPE.ACCELEROMETER){
-		if(ControlParameters.Clicked === true)
-		{
-			ControlParameters.Clicked = false;
-			this.RotateHammer.enable = false;			
-		}
-		this.Controls.update();
-	}
-	else {
-		if(ControlParameters.Clicked === true)
-		{
-			ControlParameters.Clicked = false;
-			this.RotateHammer.enable = true;
-		}
-
-		this.VisualKeeper.getVideoMesh().rotation.y -= OrientationParameters.touchRotRadX*delta;
-		this.VisualKeeper.getVideoMesh().rotation.x -= OrientationParameters.touchRotRadY*delta;	
-
-
-		if(OrientationParameters.touchRotRadX > 0.7)
-		{
-			OrientationParameters.touchRotRadX -= OrientationParameters.touchRotRadX/100;			
-		} else 
-			OrientationParameters.touchRotRadX = 0;
-
-		if(OrientationParameters.touchRotRadY > 0.7)
-		{
-			OrientationParameters.touchRotRadY -= OrientationParameters.touchRotRadY/100;			
-		} else
-			OrientationParameters.touchRotRadY = 0;	
-
-	}
-
-	if(this.FrontMovingOn)
-	{
-
-			this.AntiVec = this.Camera.getWorldDirection();
-			this.AntiVec.normalize();
-			this.AntiVec.multiplyScalar(100);
-			this.VisualKeeper.getVideoMesh().position.add(this.AntiVec);				
-	}
-	if(this.BackMovingOn)
-	{
-
-			this.AntiVec = this.Camera.getWorldDirection();
-			this.AntiVec.normalize();
-			this.AntiVec.multiplyScalar(-100);
-			this.VisualKeeper.getVideoMesh().position.add(this.AntiVec);				
-	}
-};
 
 /* Обновляет все необходимые объекты и проводит вычисления
  */
 _LocalUser.prototype.update = function (mult)
 {
-	this.controlUpdate(mult);
+	this.Controls.update(mult/100);
 	this.CollectingObjects.update();
 	this.updateMessages();
 	this.sendDataToAllRemoteUsers(this.NetMessagesObject.MoveMessage);	

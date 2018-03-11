@@ -14,6 +14,19 @@ var _GlobalObjects = function ()
 	this.Menu = null;
 	this.Game = null;
 	this.Stream = null;
+	this.Controls = null;
+	this.DeviceType = null;
+	
+ 	var testExp = new RegExp('Android|webOS|iPhone|iPad|' +
+    		       'BlackBerry|Windows Phone|'  +
+    		       'Opera Mini|IEMobile|Mobile' , 
+    		      'i');
+  
+    if (testExp.test(navigator.userAgent)){
+    	this.DeviceType = DEVICE_TYPES.MOBILE;
+    }else{
+    	this.DeviceType = DEVICE_TYPES.DESKTOP;
+    }
 
 	window.GLOBAL_OBJECTS = this;
 
