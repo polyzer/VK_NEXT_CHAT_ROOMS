@@ -18,6 +18,8 @@ THREEx.ComputerMobileControls = function (json_params)
 		this.Camera = json_params.Camera;
 		this.Object3D = json_params.Object3D;
 	}
+	this.touchUpdate = this.touchUpdate.bind(this);
+	this.testDeviceMotion = this.testDeviceMotion.bind(this);
 
 	this.OrientationParameters = {
 		alpha: 0,
@@ -36,7 +38,7 @@ THREEx.ComputerMobileControls = function (json_params)
 
 	this.AccelerometerControlButton = document.createElement("button");
 	this.AccelerometerControlButton.setAttribute("id", "AccelerometerControlButton");
-    this.AccelerometerControlButton.className = "AccerometerControlButton";
+    this.AccelerometerControlButton.className = "AccelerometerControlButton";
     document.body.appendChild(this.AccelerometerControlButton);
 
 	this.TouchControlButton = document.createElement("button");
@@ -45,15 +47,15 @@ THREEx.ComputerMobileControls = function (json_params)
     document.body.appendChild(this.TouchControlButton);
 
 	this.AccelerometerControlButton.addEventListener("click", function () {
-		this.TouchControlButton.style.visible = "visible";
-		this.AccelerometerControlButton.style.visible = "hidden";
+		this.TouchControlButton.style.visibility = "visible";
+		this.AccelerometerControlButton.style.visibility = "hidden";
 		this.RotateHammer.enable = false;
 		this.update = this.AccelerometerControls.update;
 	}.bind(this));
 
 	this.TouchControlButton.addEventListener("click", function () {
-		this.TouchControlButton.style.visible = "hidden";
-		this.AccelerometerControlButton.style.visible = "visible";
+		this.TouchControlButton.style.visibility = "hidden";
+		this.AccelerometerControlButton.style.visibility = "visible";
 		this.RotateHammer.enable = true;
 		this.update = this.touchUpdate;
 	}.bind(this));
@@ -122,12 +124,13 @@ THREEx.ComputerMobileControls = function (json_params)
 
 
 	this.AccelerometerControls = new THREE.DeviceOrientationControls(this.Camera);
+	this.update = this.accelerometerUpdate;
 
 
 	///////////////////////////////////////////////
 	// Определяем, поддерживает ли устройство акселерометр!
 	if (window.DeviceMotionEvent != undefined) {
-		window.addEventListener("devicemotion", this.testDeviceMotion.bind(this));
+		window.addEventListener("devicemotion", this.testDeviceMotion);
 	} else {
 		document.body.removeChild(this.AccelerometerControlButton);
 		document.body.removeChild(this.TouchControlButton);
@@ -135,25 +138,28 @@ THREEx.ComputerMobileControls = function (json_params)
 
 };
 
+THREEx.ComputerMobileControls.prototype.accelerometerUpdate  = function (delta)
+{
+	this.AccelerometerControls.update();
+};
+
 THREEx.ComputerMobileControls.prototype.touchUpdate = function(delta)
 {
-
-	delta /= 100;
 
 	this.Object3D.rotation.y -= this.OrientationParameters.touchRotRadX*delta;
 	this.Object3D.rotation.x -= this.OrientationParameters.touchRotRadY*delta;	
 
 
-	if(this.OrientationParameters.touchRotRadX > 0.7)
+	if(Math.abs(this.OrientationParameters.touchRotRadX) > 0.005)
 	{
-		this.OrientationParameters.touchRotRadX -= this.OrientationParameters.touchRotRadX/100;			
-	} else 
+		this.OrientationParameters.touchRotRadX -= this.OrientationParameters.touchRotRadX/10;			
+	} else if(this.OrientationParameters.touchRotRadX)
 		this.OrientationParameters.touchRotRadX = 0;
 
-	if(this.OrientationParameters.touchRotRadY > 0.7)
+	if(Math.abs(this.OrientationParameters.touchRotRadY) > 0.005)
 	{
-		this.OrientationParameters.touchRotRadY -= this.OrientationParameters.touchRotRadY/100;			
-	} else
+		this.OrientationParameters.touchRotRadY -= this.OrientationParameters.touchRotRadY/10;			
+	} else if(this.OrientationParameters.touchRotRadY)
 		this.OrientationParameters.touchRotRadY = 0;	
 
 	if(this.FrontMovingOn)
@@ -171,7 +177,7 @@ THREEx.ComputerMobileControls.prototype.touchUpdate = function(delta)
 		this.AntiVec.multiplyScalar(-100);
 		this.Object3D.position.add(this.AntiVec);				
 	}
-}.bind(this);
+};
 
 
 // Функция тестирует акселерометр на показания данных
@@ -180,27 +186,42 @@ THREEx.ComputerMobileControls.prototype.testDeviceMotion = function (event) {
 	// передаются как undefined||null, значит, что устройство
 	// не поддерживает акселерометр,
 	// иначе данные были бы числом.
-	if(!event.rotationRate.alpha)
+	if(event.rotationRate.alpha === null || event.rotationRate.alpha === undefined)
 	{
 		// Если у нас данные - не число, то удаляем все собственные обработчики;
 		// чтобы они за зря не крутились
-		window.removeEventListener("devicemotion", this.testDeviceMotion);			
-		document.body.removeChild(this.AccelerometerControlButton);
-		document.body.removeChild(this.TouchControlButton);
+		window.removeEventListener("devicemotion", this.testDeviceMotion);	
+		if(document.body.contains(this.AccelerometerControlButton))	
+			document.body.removeChild(this.AccelerometerControlButton);
+		if(document.body.contains(this.TouchControlButton))
+			document.body.removeChild(this.TouchControlButton);
 	} else {
 		// если данные являются числом, то устройство имеет акселерометр,
 		// устанавливаем нормальный обработчик и удаляем тестовый;
-		window.addEventListener("devicemotion", this.onDeviceMotion);			
+		this.update = this.accelerometerUpdate;
 		window.removeEventListener("devicemotion", this.testDeviceMotion);			
+		window.addEventListener("devicemotion", this.onDeviceMotion.bind(this));			
+		window.addEventListener("deviceorientation", this.onDeviceOrientation.bind(this));			
 	}
 };
 
 
 // Наш обработчик ускорения
- THREEx.ComputerMobileControls.prototype.onDeviceMotion = function (event) {
+THREEx.ComputerMobileControls.prototype.onDeviceMotion = function (event) {
 
 	this.OrientationParameters.alpha = event.rotationRate.alpha;
 	this.OrientationParameters.beta = -event.rotationRate.beta;
+	this.OrientationParameters.deviceMotionInterval = event.interval;
+
+	this.OrientationParameters.phi = 0;
+	this.OrientationParameters.theta = 0;
+};
+
+// Наш обработчик ускорения
+THREEx.ComputerMobileControls.prototype.onDeviceOrientation = function (event) {
+
+	this.OrientationParameters.alpha = event.orientation.alpha;
+	this.OrientationParameters.beta = -event.orientation.beta;
 	this.OrientationParameters.deviceMotionInterval = event.interval;
 
 	this.OrientationParameters.phi = 0;

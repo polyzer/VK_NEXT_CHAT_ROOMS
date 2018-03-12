@@ -461,12 +461,11 @@ body {
 	width: 100px;
 }
 .AccelerometerControlButton {
-	display: inline-block;
 	margin: 5px 10px;
 	padding: 10px 15px;
 	position: absolute;
 	right: 10%;
-	top: 90%;
+	bottom: 10%;
 	z-index: 10090008899878768765;
 	background-image: url("../images/buttons/accelerometer.png");
 	background-size: 100% 100%;
@@ -476,12 +475,11 @@ body {
 
 }
 .TouchControlButton {
-	display: inline-block;
 	margin: 5px 10px;
 	padding: 10px 15px;
 	position: absolute;
 	right: 10%;
-	top: 90%;
+	bottom: 10%;
 	z-index: 10090008899878768765;
 	background-image: url("../images/buttons/touch.png");
 	background-size: 100% 100%;

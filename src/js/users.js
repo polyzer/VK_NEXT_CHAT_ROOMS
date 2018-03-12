@@ -49,7 +49,6 @@ var _LocalUser = function (json_params)
 			this.Controls.dragToLook = false;
 		}
 
-
 		
 		this.Raycaster = new THREE.Raycaster();
 		this.MouseVector = new THREE.Vector2();
