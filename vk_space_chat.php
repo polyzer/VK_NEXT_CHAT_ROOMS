@@ -31,7 +31,7 @@
 <script src="./src/js/users.js"></script>
 <script src="./src/js/visual_keeper.js"></script>
 <script src="./src/js/hint.js"></script>
-<script src="./src/js/my_controls.js"></script>
+<script src="./src/js/ComputerMobileControls.js"></script>
 <script src="./src/js/flying_objects.js"></script>
 <script src="./src/js/user_chat_controls.js"></script>
 <script src="./src/js/collecting_objects.js"></script>
@@ -147,6 +147,14 @@ if(isUsingPlugin === true)
 	});
 
 });
+
+	///////////////////////////////////////////////
+//	Определяем, поддерживает ли устройство акселерометр!
+	if (window.DeviceOrientationEvent != undefined) 
+		window.addEventListener("deviceorientation", function deviceorient_ok(event) {
+			// window.removeEventListener("deviceorientation", deviceorient_ok);
+		});
+
 </script>
 
 

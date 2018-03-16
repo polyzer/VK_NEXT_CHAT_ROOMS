@@ -13,18 +13,14 @@ var _VKSpaceChat = function (json_params)
 	this.onGameEndingBF = this.onGameEnding.bind(this);
 
 
-function onWindowResize(){
-    this.Camera.aspect = window.innerWidth / window.innerHeight;
-    this.Camera.updateProjectionMatrix();
-    this.Renderer.setSize( window.innerWidth, window.innerHeight );
-}
+
 	window.addEventListener( 'resize', onWindowResize.bind(this), false );
 
 	this.Renderer = null;
 	this.CSSRenderer = null;
 	this.Camera = null;
 	this.updating = true;
-	// подготовка
+	// there is container for Renderer.domElement
 	this.Container = document.createElement("div");
 	this.Container.tabindex = 1;
 	this.Container.autofocus = true;
@@ -52,9 +48,13 @@ function onWindowResize(){
 		this.CSSRenderer = new THREE.CSS3DRenderer();	
 	}
 
+	// Main Scene for Vis-a-Vis
 	this.Scene = new THREE.Scene();
+	// this Scene contains CSSObject3D elements
 	this.CSSScene = new THREE.Scene();
+	// Scene for Hunters;
 	this.BadScene = new THREE.Scene();
+	// Array of All Scenes (it uses for speed access to Scenes)
 	this.Scenes = [this.Scene, this.CSSScene, this.BadScene];
 
 
@@ -93,25 +93,27 @@ function onWindowResize(){
 	this.CSSRenderer.domElement.style.top = 0;
 	this.Container.appendChild(this.CSSRenderer.domElement);
 
+	// There is white Cube Mesh in center of the Room
 	this.Stand = new THREE.Mesh(new THREE.BoxGeometry(1000, 80, 1000), new THREE.MeshStandardMaterial({transparent: true, opacity: 0.8}));
 	this.Scene.add(this.Stand);
 
+	// This clocks uses for calculating FPS
 	this.Clock = new THREE.Clock();
-	
+	// User's Person
 	this.Person = json_params.person;
 	
-// ВНИМАНИЕ: В игре используется глобальный объект		
+	// Object for 		
 	this.NetMessagesObject = new _NetMessages({nickname: this.Nickname, id: this.ID});
 	
-	// Список удаленных игроков;
+	// List of Remote Users;
 	this.RemoteUsers = [];
  
-  // Локальный игрок
+  	// Our Local user;
 	this.LocalUser = null;
 	/*Все игроки в системе.
-	[0] - LocalUser;
-	[1] - RemoteUsers - удаленные игроки
-  структура, хранящая всех игроков, включая локального;	
+	[0] = this.LocalUser;
+	[1] = this.RemoteUsers - удаленные игроки
+		  структура, хранящая всех игроков, включая локального;	
 	*/
 	this.AllUsers = [];
 
@@ -131,7 +133,7 @@ function onWindowResize(){
 		console.log(err.type);
 	});
 	/**
-	Счётчик наших визави. Занимается отображением
+	Our Vis-a-Vis counter. Занимается отображением
 	*/
 	this.VisavisCounter = {};
 	this.VisavisCounter.Div = document.createElement("div");
@@ -144,6 +146,12 @@ function onWindowResize(){
 	this.Time = Date.now();
 	this.onOpenInitAndStartGame();
 };		
+
+_VKSpaceChat.prototype.onWindowResize = function (){
+    this.Camera.aspect = window.innerWidth / window.innerHeight;
+    this.Camera.updateProjectionMatrix();
+    this.Renderer.setSize( window.innerWidth, window.innerHeight );
+};
 
 _VKSpaceChat.prototype.onRecieveMediaConnection = function (call)
 {

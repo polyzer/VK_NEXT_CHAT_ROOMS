@@ -126,7 +126,10 @@ _LocalUser.prototype.setPointsCallback = function (num)
 _LocalUser.prototype.updateVisavisCounter = function ()
 {
 };
-
+/*
+It adds little Vis-a-Vis mesh to array, that will
+be add to Our Mesh.
+*/
 _LocalUser.prototype.addTargetMeshToMeshesArray = function (mesh)
 {
 	this.VisavisCounter.MeshesArray.push(mesh);
