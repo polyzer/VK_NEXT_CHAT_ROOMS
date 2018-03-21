@@ -4,7 +4,7 @@
 var _Menu = function (json_params)
 {
 		
-		/* START OF FUNCTIONS BINDS
+	/* START OF FUNCTIONS BINDS
 	 * */
 	this.updateBF = this.update.bind(this);
 	this.onNicknameEnteringBF = this.onNicknameEntering.bind(this);

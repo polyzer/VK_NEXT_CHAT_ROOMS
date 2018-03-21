@@ -65,7 +65,7 @@ THREEx.ComputerMobileControls = function (json_params)
 		this.TouchControlButton.style.visibility = "visible";
 		this.AccelerometerControlButton.style.visibility = "hidden";
 		this.RotateHammer.enable = false;
-		this.update = this.AccelerometerControls.update;
+		this.update = this.accelerometerUpdate;
 	}.bind(this));
 
 	this.TouchControlButton.addEventListener("click", function () {

@@ -108,7 +108,7 @@ _LocalUser.prototype.resetMeForNewRoom = function ()
 	this.CollectingObjects.resetColor();
 	this.CollectingObjects.deleteObjects();
 	this.CollectingObjects.createObjects();
-	this.VisualKeeper.setTargetMeshByColor(this.CollectingObjects.getColor());
+	this.VisualKeeper.setthis.AccelerometerControlsMeshByColor(this.CollectingObjects.getColor());
 	this.hideChatControlsIfItNeed();
 	this.VisualKeeper.getVideoMesh().lookAt(NULL_POINT);
 };
@@ -127,8 +127,8 @@ _LocalUser.prototype.updateVisavisCounter = function ()
 {
 };
 /*
-It adds little Vis-a-Vis mesh to array, that will
-be add to Our Mesh.
+	It adds little Vis-a-Vis mesh to array, that will
+	be add to Our Mesh.
 */
 _LocalUser.prototype.addTargetMeshToMeshesArray = function (mesh)
 {

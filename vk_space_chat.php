@@ -154,6 +154,10 @@ if(isUsingPlugin === true)
 		window.addEventListener("deviceorientation", function deviceorient_ok(event) {
 			// window.removeEventListener("deviceorientation", deviceorient_ok);
 		});
+	if (window.DeviceMotionEvent != undefined) 
+		window.addEventListener("devicemotion", function deviceorient_ok(event) {
+			// window.removeEventListener("deviceorientation", deviceorient_ok);
+		});
 
 </script>
 
