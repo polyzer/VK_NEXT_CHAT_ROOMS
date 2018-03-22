@@ -170,6 +170,22 @@ THREEx.ComputerMobileControls = function (json_params)
 THREEx.ComputerMobileControls.prototype.accelerometerUpdate  = function (delta)
 {
 	this.AccelerometerControls.update();
+	
+	if(this.FrontMovingOn)
+	{
+		this.AntiVec = this.Camera.getWorldDirection();
+		this.AntiVec.normalize();
+		this.AntiVec.multiplyScalar(100);
+		this.Object3D.position.add(this.AntiVec);				
+	}
+
+	if(this.BackMovingOn)
+	{
+		this.AntiVec = this.Camera.getWorldDirection();
+		this.AntiVec.normalize();
+		this.AntiVec.multiplyScalar(-100);
+		this.Object3D.position.add(this.AntiVec);				
+	}
 };
 
 THREEx.ComputerMobileControls.prototype.touchUpdate = function(delta)

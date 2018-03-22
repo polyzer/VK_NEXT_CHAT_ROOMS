@@ -29,12 +29,6 @@ var _LocalUser = function (json_params)
 		this.VisualKeeper = new _LocalVisualKeeper({scene: this.Scene, camera: this.Camera});
 		this.Stream = json_params.stream;
 
-		// this.Controls = new THREE.FlyControls(this.VisualKeeper.getVideoMesh(), document.getElementById("MainContainer"));
-		// this.Controls.movementSpeed = 90;
-		// this.Controls.rollSpeed = Math.PI / 42;
-		// this.Controls.autoForward = false;
-		// this.Controls.dragToLook = false;
-		// // accelerometer orientation controller
 		if(GLOBAL_OBJECTS.DeviceType === DEVICE_TYPES.MOBILE)
 		{
 			this.Controls = new THREEx.ComputerMobileControls({

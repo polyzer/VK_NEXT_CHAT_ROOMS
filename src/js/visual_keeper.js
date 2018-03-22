@@ -64,15 +64,13 @@ var _LocalVisualKeeper = function (json_params)
 		this.VideoMesh.Material = new THREE.MeshBasicMaterial({side:THREE.DoubleSide});			
 	}
 
-//		this.VideoMesh.Mesh = new THREE.Mesh(this.VideoMesh.Geometry, this.VideoMesh.Material);		
-//		this.Video.muted = 1;
-	this.TargetMesh = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshStandardMaterial({color: 0x000000, side: THREE.DoubleSide, }));
+	this.TargetMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: 0x000000, side: THREE.DoubleSide, }));
 	this.TargetMesh.add(new THREE.LineSegments( 
 		new THREE.EdgesGeometry( this.TargetMesh.geometry ), 
 		new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } )
 	));
 		
-	this.TargetMesh.position.set(-25, -15, -50);
+	this.TargetMesh.position.set((50/2-5-3)*(CAMERA_PARAMETERS.ASPECT), 50/2-6, -50);
 
 	this.Scene.remove(this.Camera);
 	this.VideoMesh.Mesh = this.Camera;

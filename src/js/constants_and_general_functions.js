@@ -273,6 +273,7 @@ var CAMERA_PARAMETERS = {
 	ANGLE: 45,
 	SCREEN_WIDTH: window.innerWidth,
 	SCREEN_HEIGHT: window.innerHeight,
+	ASPECT: window.innerWidth/window.innerHeight,
 	NEAR: 1,
 	FAR: 130000,
 	STORE_SCREEN_WIDTH: 500,
